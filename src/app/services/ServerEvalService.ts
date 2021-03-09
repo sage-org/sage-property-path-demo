@@ -64,7 +64,8 @@ export class ServerEvalService {
             'ContentType': 'application/json'
         })
         return new Promise<SageResponse>((resolve, reject) => {
-            this.httpClient.post(AppSettings.SAGE_ENDPOINT, body, { headers }).subscribe((response: SageResponse) => {                
+            let url: string = `${AppSettings.SAGE_ENDPOINT}/sparql`
+            this.httpClient.post(url, body, { headers }).subscribe((response: SageResponse) => {                
                 console.log(response)
                 resolve(response)
             }, (error: any) => {

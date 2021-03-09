@@ -1,4 +1,4 @@
-<div class="row m-0 d-flex justify-content-center">
+<!-- <div class="row m-0 d-flex justify-content-center">
   <div class="card p-0 col-12">
     <div class="card-header">
         <span>Query editor</span>
@@ -9,6 +9,56 @@
         [(ngModel)]="query"
         (ngModelChange)="onQueryChange()">
       </ngx-codemirror>
+    </div>
+  </div>
+</div> -->
+<div>
+  <div class="col-12 p-0 mb-2">
+    <div class="input-group mb-2">
+        <button class="btn btn-outline-primary rounded-0 col-3" type="button">Graphs</button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Separated link</a></li>
+        </ul>
+        <input type="text" class="form-control">
+    </div>
+    <div class="input-group mb-2">
+        <button class="btn btn-outline-primary rounded-0 col-3" type="button">Queries</button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Separated link</a></li>
+        </ul>
+        <input type="text" class="form-control">
+    </div>
+    <div class="input-group mb-2">
+      <span class="input-group-text rounded-0">Quantum</span>
+      <input type="number" class="form-control rounded-0" min="75" step="25"
+        [(ngModel)]="quantum" (ngModelChange)="onQuantumChange()">
+      <span class="input-group-text rounded-0">MaxDepth</span>
+      <input type="number" class="form-control" min="2" step="1"
+        [(ngModel)]="maxDepth" (ngModelChange)="onMaxDepthChange()">
+    </div>
+  </div>
+  <div class="col-12 p-0">
+    <div class="row m-0 d-flex justify-content-center">
+      <div class="card p-0 col-12">
+        <div class="card-header">
+            <span>Query editor</span>
+        </div>
+        <div class="card-body p-0">
+          <ngx-codemirror #codemirror
+            [options]="codeMirrorOptions"
+            [(ngModel)]="query"
+            (ngModelChange)="onQueryChange()">
+          </ngx-codemirror>
+        </div>
+      </div>
     </div>
   </div>
 </div>

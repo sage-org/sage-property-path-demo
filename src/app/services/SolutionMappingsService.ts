@@ -29,4 +29,10 @@ export class SolutionMappingsService {
             this.add(solution)
         }
     }
+
+    public clear(): void {
+        this.results = new Array<Object>()
+        this.memory = new Map<string, string>()
+        this.nbDuplicates = 0
+    }
 }

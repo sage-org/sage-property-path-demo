@@ -23,26 +23,33 @@ export class QueryEditorComponent implements OnInit {
   @Input() public query: string
   @Output() public queryChange = new EventEmitter<string>()
 
-  constructor() { 
-    // this.onExecuteQuery = new EventEmitter<string>()
-//     this.query = `PREFIX : <http://example.org/gmark/>
-// SELECT ?x0 ?x4
-// WHERE {
-//   ?x0 (^:plocation) ?v0 . ?v0 (^:peditor) ?x1 . 
-//   ?x1 ((:pauthor/^:pauthor))+ ?x2 . 
-//   ?x2 ((:peditor/:phomepage/^:phomepage)|(^:pincludes/:pincludes))+ ?x3 . 
-//   ?x3 (:peditor) ?v1 . ?v1 (:pfollows) ?v2 . ?v2 (^:pfollows) ?x4 . 
-// }`
-  }
+  @Input() public graph: string
+  @Output() public graphChange = new EventEmitter<string>()
+
+  @Input() public quantum: number
+  @Output() public quantumChange = new EventEmitter<number>()
+
+  @Input() public maxDepth: number
+  @Output() public maxDepthChange = new EventEmitter<number>()
+
+  constructor() { }
 
   ngOnInit(): void {
   }
 
-  public onQueryChange() {
+  public onQueryChange(): void {
     this.queryChange.emit(this.query)
   }
 
-  // public executeQuery(): void {
-  //   this.onExecuteQuery.emit(this.query)
-  // }
+  public onGraphChange(): void {
+    this.graphChange.emit(this.graph)
+  }
+
+  public onQuantumChange(): void {
+    this.quantumChange.emit(this.quantum)
+  }
+
+  public onMaxDepthChange(): void {
+    this.maxDepthChange.emit(this.maxDepth)
+  }
 }

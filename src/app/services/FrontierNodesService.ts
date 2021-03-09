@@ -10,7 +10,7 @@ export class FrontierNodesService {
     public queue: Array<ExpandTask>
 
     constructor(private taskManager: TaskManagerService) {
-        this.queue = new Array<any>()
+        this.queue = new Array<ExpandTask>()
     }
 
     private parseQuery(query: string): SelectQuery {
@@ -172,4 +172,8 @@ export class FrontierNodesService {
 
         // this.queue.unshift(this.taskManager.add(node, new Generator().stringify(expandedQuery), controlTuple))
     }   
+
+    public clear(): void {
+        this.queue = new Array<ExpandTask>()
+    }
 }

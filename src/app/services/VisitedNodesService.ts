@@ -52,4 +52,8 @@ export class VisitedNodesService {
             this.visitedNodes.get(id).set(controlTuple.node, Math.min(depth, controlTuple.depth))
         }
     }
+
+    public clear(): void {
+        this.visitedNodes = new Map<string, Map<string, number>>()
+    }
 }
