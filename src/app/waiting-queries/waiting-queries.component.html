@@ -1,0 +1,10 @@
+<div class="card">
+    <div class="card-header">
+        <span><strong>FIFO: </strong>{{frontierNodes.queue.length}} remaing queries</span>
+    </div>
+    <div class="card-body p-0 d-flex ">
+        <button *ngFor="let query of frontierNodes.queue" class="btn btn-primary m-2 col-2 d-flex align-items-center justify-content-center">
+            query-{{query.name}}
+        </button>
+    </div>
+</div>
