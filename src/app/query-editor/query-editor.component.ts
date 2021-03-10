@@ -20,6 +20,25 @@ export class QueryEditorComponent implements OnInit {
     lint: true
   }
 
+  private graphs = {
+    'GMark': 'http://example.org/datasets/gmark'
+  }
+
+  private gmarkQueries = {
+    'Gmark - Query 1': `PREFIX : <http://example.org/gmark/>
+SELECT ?x0 ?x4
+WHERE {
+  ?x0 (^:plocation) ?v0 . ?v0 (^:peditor) ?x1 . 
+  ?x1 ((:pauthor/^:pauthor))+ ?x2 . 
+  ?x2 ((:peditor/:phomepage/^:phomepage)|(^:pincludes/:pincludes))+ ?x3 . 
+  ?x3 (:peditor) ?v1 . ?v1 (:pfollows) ?v2 . ?v2 (^:pfollows) ?x4 . 
+}`
+  }
+
+  public selectedQuery: string
+  public queryMenuOpen: boolean
+  public graphMenuOpen: boolean
+
   @Input() public query: string
   @Output() public queryChange = new EventEmitter<string>()
 
@@ -32,9 +51,52 @@ export class QueryEditorComponent implements OnInit {
   @Input() public maxDepth: number
   @Output() public maxDepthChange = new EventEmitter<number>()
 
-  constructor() { }
+  constructor() { 
+    this.selectedQuery = ""
+    this.queryMenuOpen = false
+    this.graphMenuOpen = false
+  }
 
   ngOnInit(): void {
+    this.quantum = 1500
+    this.maxDepth = 5
+  }
+
+  public listGraphs(): Array<string> {
+    return Object.keys(this.graphs)
+  }
+
+  public listGmarkQueries(): Array<string> {
+    return Object.keys(this.gmarkQueries)
+  }
+
+  public openGraphMenu(): void {
+    this.graphMenuOpen = true
+  }
+
+  public closeGraphMenu(): void {
+    this.graphMenuOpen = false
+  }
+
+  public closeQueryMenu(): void {
+    this.queryMenuOpen = false
+  }
+
+  public openQueryMenu(): void {
+    this.queryMenuOpen = true
+  }
+
+  public selectGraph(name: string): void {
+    this.graph = this.graphs[name]
+    this.closeGraphMenu()
+    this.onGraphChange()
+  }
+
+  public selectQuery(name: string): void {
+    this.selectedQuery = name
+    this.query = this.gmarkQueries[name]
+    this.closeQueryMenu()
+    this.onQueryChange()
   }
 
   public onQueryChange(): void {

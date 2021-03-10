@@ -51,4 +51,34 @@ export class TaskManagerService {
             return this.insert(path, this.root, query, controlTuple)
         }
     }
+
+    private find(path: Array<number>, node: ExpandTaskNode): ExpandTask {
+        if (path.length == 0) {
+            return node.value
+        } else {
+            let index: number = path.shift()
+            return this.find(path, node.children[index])
+        }
+    }
+
+    public get(name: string): ExpandTask {
+        if (this.root) {
+            let path = name.split('.').map((value) => Number(value))
+            path.shift()
+            return this.find(path, this.root)
+        } else {
+            return null
+        }
+    }
+
+    public parent(name: string): ExpandTask {
+        if (this.root) {
+            let path = name.split('.').map((value) => Number(value))
+            path.shift()
+            path.pop()
+            return this.find(path, this.root)
+        } else {
+            return null
+        }
+    }
 }

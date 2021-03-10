@@ -3,13 +3,14 @@ import { ControlTuple } from "../models/ControlTuple";
 import { Parser, Generator, SparqlQuery, SelectQuery, Triple, Term, BindPattern, VariableTerm, OperationExpression, LiteralTerm, BgpPattern, PropertyPath, IriTerm, BlankTerm, QuadTerm } from 'sparqljs'
 import { ExpandTask } from "../models/ExpandTask";
 import { TaskManagerService } from "./TaskManagerService";
+import { VisitedNodesService } from "./VisitedNodesService";
 
 @Injectable()
 export class FrontierNodesService {
 
     public queue: Array<ExpandTask>
 
-    constructor(private taskManager: TaskManagerService) {
+    constructor(private taskManager: TaskManagerService, private visitedNodes: VisitedNodesService) {
         this.queue = new Array<ExpandTask>()
     }
 
@@ -167,11 +168,14 @@ export class FrontierNodesService {
             throw new Error(`Path pattern not found for the control tuple: ${JSON.stringify(controlTuple)}`)
         }
         expandedQuery.where.push(this.createBgpPattern(expandedTriples))
-        
         this.queue.push(this.taskManager.create(node, new Generator().stringify(expandedQuery), controlTuple))
-
-        // this.queue.unshift(this.taskManager.add(node, new Generator().stringify(expandedQuery), controlTuple))
     }   
+
+    public refresh(): void {
+        this.queue = this.queue.filter((task: ExpandTask) => {
+            return this.visitedNodes.mustExpand(task.controlTuple)
+        })
+    }
 
     public clear(): void {
         this.queue = new Array<ExpandTask>()

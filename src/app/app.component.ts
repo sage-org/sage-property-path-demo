@@ -19,6 +19,9 @@ export class AppComponent {
   public quantum: number
   public maxDepth: number
   public query: string
+  public graph: string
+
+  public running: boolean
 
   constructor(
     private httpClient: HttpClient,
@@ -27,56 +30,52 @@ export class AppComponent {
     private visitedNodes: VisitedNodesService,
     private solutionMappings: SolutionMappingsService,
     private spy: SpyService,
-    public frontierNodes: FrontierNodesService) { 
-      this.quantum = 1500
-      this.maxDepth = 5
-      this.query = `PREFIX : <http://example.org/gmark/>
-SELECT ?x0 ?x4
-WHERE {
-  ?x0 (^:plocation) ?v0 . ?v0 (^:peditor) ?x1 . 
-  ?x1 ((:pauthor/^:pauthor))+ ?x2 . 
-  ?x2 ((:peditor/:phomepage/^:phomepage)|(^:pincludes/:pincludes))+ ?x3 . 
-  ?x3 (:peditor) ?v1 . ?v1 (:pfollows) ?v2 . ?v2 (^:pfollows) ?x4 . 
-}`
-    }
+    public frontierNodes: FrontierNodesService) { }
 
-  public clear(): void {
-    this.visitedNodes.clear()
+  ngOnInit(): void {
+    this.quantum = 1500
+    this.maxDepth = 5
+    this.running = false
+  }
+
+  public stopQuery(): void {
     this.frontierNodes.clear()
-    this.solutionMappings.clear()
-    this.spy.clear()
+    this.serverEval.stop()
+    this.running = false
   }
 
   public executeQuery() {
     let url = `${AppSettings.SAGE_ENDPOINT}/backdoor/overwrite-config`
     let body = { quantum: this.quantum, maxDepth: this.maxDepth }
+    this.spy.clear()
+    this.visitedNodes.clear()
+    this.frontierNodes.clear()
+    this.solutionMappings.clear()
+    this.running = true
     this.httpClient.post(url, body).subscribe(() => {
-      this.clear()
       let node: ExpandTask = this.taskManager.create(null, this.query, null)
-      this.serverEval.execute(node, 'http://example.org/datasets/gmark').then(() => {
-        console.log(this.visitedNodes.visitedNodes)
-        console.log(this.frontierNodes.queue)
-        console.log(this.solutionMappings.results.length)
+      this.serverEval.execute(node, this.graph).then(() => {
+        if (this.frontierNodes.queue.length == 0) {
+          this.running = false
+        }
+      }).catch((error: any) => {
+        console.error(error)
+        this.running = false
       })
     })
-
-    
-    // this.frontierNodes.queue.push(node)
-    // let query = "PREFIX : <http://example.org/gmark/> SELECT ?x0 ?x4 WHERE { ?x0 (^:plocation) ?v0 . ?v0 (^:peditor) ?x1 . ?x1 ((:pauthor/^:pauthor))+ ?x2 . ?x2 ((:peditor/:phomepage/^:phomepage)|(^:pincludes/:pincludes))+ ?x3 . ?x3 (:peditor) ?v1 . ?v1 (:pfollows) ?v2 . ?v2 (^:pfollows) ?x4 . }"
-    // let next: Node = this.taskManager.add(null, query, null)
-    // this.frontierNodes.queue.push(next)
   }
 
   public expandFrontierNode() {
-    
     let next: ExpandTask = this.frontierNodes.queue.shift()
-    let mustExpand: boolean = this.visitedNodes.mustExpand(next.controlTuple)
-    while (!mustExpand && this.frontierNodes.queue.length > 0) {
-      next = this.frontierNodes.queue.shift()
-      mustExpand = this.visitedNodes.mustExpand(next.controlTuple)
-    }
-    if (mustExpand) {
-      this.serverEval.execute(next, 'http://example.org/datasets/gmark')
+    if (this.visitedNodes.mustExpand(next.controlTuple)) {
+      this.serverEval.execute(next, this.graph).then(() => {
+        if (this.frontierNodes.queue.length == 0) {
+          this.running = false
+        }
+      }).catch((error: any) => {
+        console.error(error)
+        this.running = false
+      })
     }
   }
 }

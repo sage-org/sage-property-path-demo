@@ -1,60 +1,38 @@
 
-<div class="container-fluid p-4">
+<div class="container-fluid p-5">
 
     <div class="row m-0 mb-2">
         <app-query-editor class="col-12 p-0" 
             [(query)]="query" 
             [(quantum)]="quantum" 
-            [(maxDepth)]="maxDepth">
+            [(maxDepth)]="maxDepth"
+            [(graph)]="graph">
         </app-query-editor>
-        <!-- <div class="col-12 p-0 mb-2">
-            <div class="input-group mb-2">
-                <button class="btn btn-outline-primary mr-1 col-3" type="button">Datasets</button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Separated link</a></li>
-                </ul>
-                <input type="text" class="form-control">
-            </div>
-            <div class="input-group">
-                <button class="btn btn-outline-primary mr-1 col-3" type="button">Queries</button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Separated link</a></li>
-                </ul>
-                <input type="text" class="form-control">
-            </div>
-        </div>
-        <div class="col-12 p-0">
-            <div class="col-6 p-0">
-                <app-query-editor class="col-12 p-0" [(query)]="query"></app-query-editor>
-            </div>
-        </div> -->
     </div>
 
     <div class="row m-0 mb-2">
         <div class="col-12 p-0">
-            <app-waiting-queries></app-waiting-queries>
+            <app-waiting-queries [maxDepth]="maxDepth"></app-waiting-queries>
+        </div>
+    </div>
+
+    <div class="row m-0 mb-2">
+        <div class="col-12 p-0">
+            <app-query-progress></app-query-progress>
         </div>
     </div>
 
     <div class="row m-0 mb-4">
-        <button class="btn btn-outline-success col-1" [ngClass]="{'d-none': frontierNodes.queue.length > 0}" 
+        <button class="btn btn-outline-success col-1" [ngClass]="{'d-none': running}" 
             (click)="executeQuery()">
             Execute
         </button>
-        <button class="btn btn-outline-primary col-1" [ngClass]="{'d-none': frontierNodes.queue.length == 0}" 
+        <button class="btn btn-outline-primary mr-2 col-1" [ngClass]="{'d-none': !running || frontierNodes.queue.length == 0}" 
             (click)="expandFrontierNode()">
             Next
         </button>
-        <button class="btn btn-outline-warning ml-2 col-1" [ngClass]="{'d-none': frontierNodes.queue.length == 0}" 
-            (click)="clear()">
+        <button class="btn btn-outline-warning col-1" [ngClass]="{'d-none': !running}" 
+            (click)="stopQuery()">
             Stop
         </button>
     </div>
@@ -64,6 +42,12 @@
             <app-live-statistics></app-live-statistics>
         </div>
     </div>    
+
+    <div class="row m-0 mb-4">
+        <div class="col-12 p-0">
+            <router-outlet></router-outlet>
+        </div>
+    </div> 
 
     <div class="row m-0">
         <div class="col-12 p-0">

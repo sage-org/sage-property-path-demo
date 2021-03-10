@@ -1,0 +1,247 @@
+syntax = "proto3";
+
+package iterators;
+
+message TriplePattern {
+  string subject = 1;
+  string predicate = 2;
+  string object = 3;
+  string graph = 4;
+}
+
+message SavedScanIterator {
+  TriplePattern pattern = 1;
+  map<string, string> mu = 2;
+  int64 cardinality = 3;
+  int64 progress = 4;
+  string last_read = 5;
+  string timestamp = 6;
+}
+
+message SavedReducedIterator {
+  oneof source {
+    SavedProjectionIterator proj_source = 1;
+   }
+}
+
+message SavedProjectionIterator {
+  repeated string values = 1;
+  oneof source {
+    SavedScanIterator scan_source = 2;
+    SavedIndexJoinIterator join_source = 3;
+    SavedBagUnionIterator union_source = 4;
+    SavedFilterIterator filter_source = 5;
+    SavedBindIterator bind_source = 6;
+    SavedProjectionIterator proj_source = 7;
+    SavedTransitiveClosureIterator transitive_closure_source = 8;
+    SavedDLS dls_source = 9;
+    SavedPiggyBackIterator piggyback_source = 10;
+  }
+}
+
+message SavedPiggyBackIterator {
+  map<string, string> mu = 1;
+  oneof source {
+    SavedScanIterator scan_source = 2;
+    SavedIndexJoinIterator join_source = 3;
+    SavedBagUnionIterator union_source = 4;
+    SavedFilterIterator filter_source = 5;
+    SavedBindIterator bind_source = 6;
+    SavedProjectionIterator proj_source = 7;
+    SavedTransitiveClosureIterator transitive_closure_source = 8;
+    SavedDLS dls_source = 9;
+  }
+  map<string, string> current_binding = 10;
+}
+
+message SavedTransitiveClosureIterator {
+
+  message PreemptableIterator {
+    oneof iterator {
+      SavedScanIterator scan_iterator = 1;
+      SavedProjectionIterator proj_iterator = 2;
+      SavedBagUnionIterator union_iterator = 3;
+      SavedIndexJoinIterator join_iterator = 4;
+      SavedFilterIterator filter_iterator = 5;
+      SavedBindIterator bind_iterator = 6;
+      SavedTransitiveClosureIterator transitive_iterator = 7;
+    }
+  }
+
+  message Bindings {
+    map<string, string> binding = 1;
+  }
+
+  string subject = 1;
+  string obj = 2;
+  repeated PreemptableIterator iterators = 3;
+  repeated Bindings bindings = 5;
+  int64 current_depth = 6;
+  int64 min_depth = 7;
+  int64 max_depth = 8;
+  int64 id = 10;
+  map<string, string> mu = 11;
+  bool forward = 12;
+  string path = 13;
+}
+
+message SavedDLS {
+  message PreemptableIterator {
+    oneof iterator {
+      SavedScanIterator scan_iterator = 1;
+      SavedProjectionIterator proj_iterator = 2;
+      SavedBagUnionIterator union_iterator = 3;
+      SavedIndexJoinIterator join_iterator = 4;
+      SavedFilterIterator filter_iterator = 5;
+      SavedBindIterator bind_iterator = 6;
+      SavedTransitiveClosureIterator transitive_iterator = 7;
+    }
+  }
+
+  message Bindings {
+    map<string, string> binding = 1;
+  }
+
+  int64 id = 1;
+  string subject = 2;
+  string path = 3;
+  string obj = 4;
+  repeated Bindings bindings = 5;
+  repeated PreemptableIterator stack = 6;
+  map<string, string> mu = 7;
+  int64 min_depth = 9;
+  int64 max_depth = 10;
+  bool forward = 11;
+  PreemptableIterator iterator = 12;
+}
+
+message SavedReflexiveClosureIterator {
+  string subject = 1;
+  string obj = 2;
+  map<string, string> mu = 3;
+  map<string, string> current_binding = 4;
+  bool done = 5;
+  SavedScanIterator scan_source = 6;
+}
+
+message SavedIndexJoinIterator {
+  oneof left {
+    SavedScanIterator scan_left = 1;
+    SavedProjectionIterator proj_left = 2;
+    SavedBagUnionIterator union_left = 3;
+    SavedIndexJoinIterator join_left = 4;
+    SavedFilterIterator filter_left = 5;
+    SavedBindIterator bind_left = 6;
+    SavedTransitiveClosureIterator transitive_closure_left = 7;
+    SavedDLS dls_left = 8;
+    SavedPiggyBackIterator piggyback_left = 9;
+  }
+  oneof right {
+    SavedScanIterator scan_right = 10;
+    SavedProjectionIterator proj_right = 11;
+    SavedBagUnionIterator union_right = 12;
+    SavedIndexJoinIterator join_right = 13;
+    SavedFilterIterator filter_right = 14;
+    SavedBindIterator bind_right = 15;
+    SavedTransitiveClosureIterator transitive_closure_right = 16;
+    SavedDLS dls_right = 17;
+    SavedPiggyBackIterator piggyback_right = 18;
+  }
+  map<string, string> mu = 19;
+}
+
+message SavedBagUnionIterator {
+  oneof left {
+    SavedScanIterator scan_left = 1;
+    SavedProjectionIterator proj_left = 2;
+    SavedBagUnionIterator union_left = 3;
+    SavedIndexJoinIterator join_left = 4;
+    SavedFilterIterator filter_left = 5;
+    SavedBindIterator bind_left = 6;
+    SavedTransitiveClosureIterator transitive_closure_left = 7;
+    SavedReflexiveClosureIterator reflexive_closure_left = 8;
+    SavedDLS dls_left = 9;
+    SavedPiggyBackIterator piggyback_left = 10;
+  }
+  oneof right {
+    SavedScanIterator scan_right = 11;
+    SavedProjectionIterator proj_right = 12;
+    SavedBagUnionIterator union_right = 13;
+    SavedIndexJoinIterator join_right = 14;
+    SavedFilterIterator filter_right = 15;
+    SavedBindIterator bind_right = 16;
+    SavedTransitiveClosureIterator transitive_closure_right = 17;
+    SavedReflexiveClosureIterator reflexive_closure_right = 18;
+    SavedDLS dls_right = 19;
+    SavedPiggyBackIterator piggyback_right = 20;
+  }
+}
+
+message SavedFilterIterator {
+  oneof source {
+    SavedScanIterator scan_source = 1;
+    SavedProjectionIterator proj_source = 2;
+    SavedBagUnionIterator union_source = 3;
+    SavedIndexJoinIterator join_source = 4;
+    SavedFilterIterator filter_source = 5;
+    SavedBindIterator bind_source = 6;
+    SavedTransitiveClosureIterator transitive_closure_source = 7;
+    SavedDLS dls_source = 8;
+  }
+  string expression = 9;
+  map<string, string> mu = 10;
+}
+
+message SavedBindIterator {
+  oneof source {
+    SavedScanIterator scan_source = 1;
+    SavedProjectionIterator proj_source = 2;
+    SavedBagUnionIterator union_source = 3;
+    SavedIndexJoinIterator join_source = 4;
+    SavedFilterIterator filter_source = 5;
+    SavedBindIterator bind_source = 6;
+    SavedTransitiveClosureIterator transitive_closure_source = 7;
+    SavedDLS dls_source = 8;
+    SavedPiggyBackIterator piggyback_source = 9;
+  }
+  string bindexpr = 10;
+  string bindvar = 11;
+  map<string, string> mu = 12;
+  bool delivered = 13;
+}
+
+message SavedConstructIterator {
+  oneof source {
+    SavedScanIterator scan_source = 1;
+    SavedProjectionIterator proj_source = 2;
+    SavedIndexJoinIterator join_source = 3;
+    SavedBagUnionIterator union_source = 4;
+    SavedFilterIterator filter_source = 5;
+    SavedBindIterator bind_source = 6;
+  }
+  repeated TriplePattern template = 7;
+}
+
+message SavedInsertData {
+  map<string, uint64> nb_inserted = 1;
+}
+
+message SavedDeleteData {
+  map<string, uint64> nb_inserted = 1;
+}
+
+message RootTree {
+  oneof source {
+    SavedScanIterator scan_source = 1;
+    SavedProjectionIterator proj_source = 2;
+    SavedIndexJoinIterator join_source = 3;
+    SavedBagUnionIterator union_source = 4;
+    SavedFilterIterator filter_source = 5;
+    SavedInsertData insert_source = 6;
+    SavedDeleteData delete_source = 7;
+    SavedBindIterator bind_source=8;
+    SavedConstructIterator construct_source = 9;
+    SavedReducedIterator reduc_source = 10;
+    SavedDLS dls_source = 11;
+  }
+}

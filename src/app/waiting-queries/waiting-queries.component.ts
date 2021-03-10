@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ExpandTask } from '../models/ExpandTask';
 import { FrontierNodesService } from '../services/FrontierNodesService';
-import { ServerEvalService } from '../services/ServerEvalService';
-import { VisitedNodesService } from '../services/VisitedNodesService';
 
 @Component({
   selector: 'app-waiting-queries',
@@ -11,26 +10,35 @@ import { VisitedNodesService } from '../services/VisitedNodesService';
 })
 export class WaitingQueriesComponent implements OnInit {
 
-  constructor(public frontierNodes: FrontierNodesService,
-    private visitedNodes: VisitedNodesService,
-    private serverEval: ServerEvalService) { }
+  @Input() public maxDepth: number
+
+  private openTask: ExpandTask
+
+  constructor(public frontierNodes: FrontierNodesService, private router: Router) { }
 
   ngOnInit(): void {
+    
   }
 
-  public evalNext(): void {
-    let next: ExpandTask = this.frontierNodes.queue.shift()
-    if (next.controlTuple == null) {
-      this.serverEval.execute(next, 'http://example.org/datasets/gmark')
+  public getDepth(task: ExpandTask): number {
+    return task.name.split('.').length
+  }
+
+  public currentDepth(): number {
+    if (this.frontierNodes.queue.length == 0) {
+      return 1
     } else {
-      let mustExpand: boolean = this.visitedNodes.mustExpand(next.controlTuple)
-      while (!mustExpand && this.frontierNodes.queue.length > 0) {
-        next = this.frontierNodes.queue.shift()
-        mustExpand = this.visitedNodes.mustExpand(next.controlTuple)
-      }
-      if (mustExpand) {
-        this.serverEval.execute(next, 'http://example.org/datasets/gmark')
-      }
+      return this.getDepth(this.frontierNodes.queue[0])
     }
+  }
+
+  public showDetail(task: ExpandTask): void {
+    if (this.openTask != null && this.openTask.name == task.name) {
+      this.router.navigate(['/'])
+      this.openTask = null
+    } else {
+      this.router.navigate(['/tasks', task.name])
+      this.openTask = task
+    }    
   }
 }

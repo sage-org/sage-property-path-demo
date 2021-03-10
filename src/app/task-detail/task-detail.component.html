@@ -1,0 +1,73 @@
+<div *ngIf="parent && task">
+    <h3>Rewriting details</h3>
+    <div class="card p-0 mb-2 col-12">
+        <div class="card-header">
+            <h5>Previous query: query-{{parent.name}}</h5>
+        </div>
+        <div class="card-body p-0">
+            <ngx-codemirror #codemirror
+                [options]="codeMirrorOptions"
+                [ngModel]="parent.query">
+            </ngx-codemirror>
+        </div>
+    </div>
+    <div class="card p-0 mb-2 col-12">
+        <div class="card-header">
+            <h5>Control tuple</h5>
+        </div>
+        <div class="card-body">
+            <div class="mb-2">
+                <h4>Path pattern</h4>
+                <div class="input-group">
+                    <span class="input-group-text d-flex justify-content-center col-2">Subject</span>
+                    <input type="text" class="form-control" value="{{task.controlTuple.path.subject}}">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text d-flex justify-content-center col-2">Predicate</span>
+                    <input type="text" class="form-control" value="{{task.controlTuple.path.predicate}}">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text d-flex justify-content-center col-2">Object</span>
+                    <input type="text" class="form-control" value="{{task.controlTuple.path.object}}">
+                </div>
+            </div>
+            <div class="mb-2">
+                <h4>Context</h4>
+                <div class="table d-table border">
+                    <thead>
+                        <tr>
+                            <th *ngFor="let variable of contextVariables()">{{variable}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td *ngFor="let mapping of contextMappings()">{{mapping}}</td>
+                        </tr>
+                    </tbody>
+                </div>
+            </div>
+            <div>
+                <h4>Frontier node to expand</h4>
+                <div class="input-group">
+                    <span class="input-group-text d-flex justify-content-center col-2">Node</span>
+                    <input type="text" class="form-control" value="{{task.controlTuple.node}}">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text d-flex justify-content-center col-2">Depth</span>
+                    <input type="text" class="form-control" value="{{task.controlTuple.depth}}">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card p-0 mb-2 col-12" *ngIf="task">
+        <div class="card-header">
+            <h5>Expanded query: query-{{task.name}}</h5>
+        </div>
+        <div class="card-body p-0">
+            <ngx-codemirror #codemirror
+                [options]="codeMirrorOptions"
+                [ngModel]="task.query">
+            </ngx-codemirror>
+        </div>
+    </div>
+</div>

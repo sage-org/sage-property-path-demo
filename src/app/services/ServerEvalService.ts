@@ -5,6 +5,7 @@ import { ExpandTask } from "../models/ExpandTask";
 import { SageQueryBody } from "../models/SageQueryBody";
 import { SageResponse } from "../models/SageResponse";
 import { FrontierNodesService } from "./FrontierNodesService";
+import { MonitoringService } from "./MonitoringService";
 import { SolutionMappingsService } from "./SolutionMappingsService";
 import { SpyService } from "./SpyService";
 import { VisitedNodesService } from "./VisitedNodesService";
@@ -12,28 +13,33 @@ import { VisitedNodesService } from "./VisitedNodesService";
 @Injectable()
 export class ServerEvalService {
 
+    private stopExecution: boolean
+
     constructor(private httpClient: HttpClient, 
         private solutions: SolutionMappingsService,
         private spy: SpyService,
         private visitedNodes: VisitedNodesService,
-        private frontierNodes: FrontierNodesService) { }
-
-    private updateMetrics(response: SageResponse): void {
-        this.spy.nbCalls++
-        this.spy.dataTransfer += new TextEncoder().encode(JSON.stringify(response)).length
-        this.spy.sizeSolutionMappings += new TextEncoder().encode(JSON.stringify(response.bindings)).length
-        this.spy.sizeControlTuples += new TextEncoder().encode(JSON.stringify(response.controls)).length
-    }
+        private frontierNodes: FrontierNodesService,
+        private monitoring: MonitoringService) { }
 
     public async execute(node: ExpandTask, graph: string) {
         console.log(node.query)
+        this.stopExecution = false
+        this.monitoring.progression = 0
         let hasNext = true
         let next = null
         let startTime: number = Date.now()
-        while (hasNext) {
+        while (hasNext && !this.stopExecution) {
             let response: SageResponse = await this.query(node.query, graph, next)
-            this.updateMetrics(response)
+            // Updates metrics
+            this.spy.executionTime += Date.now() - startTime
+            this.spy.nbCalls++
+            this.spy.dataTransfer += new TextEncoder().encode(JSON.stringify(response)).length
+            this.spy.sizeSolutionMappings += new TextEncoder().encode(JSON.stringify(response.bindings)).length
+            this.spy.sizeControlTuples += new TextEncoder().encode(JSON.stringify(response.controls)).length
+            // Updates solution mappings
             this.solutions.addAll(response.bindings)
+            // Computes control tuples
             for (let controlTuple of response.controls) {
                 if (this.visitedNodes.hasBeenVisited(controlTuple)) {
                     this.visitedNodes.updateVisitedDepth(controlTuple)
@@ -46,12 +52,20 @@ export class ServerEvalService {
             }
             hasNext = response.hasNext
             next = response.next
+            if (hasNext) {
+                this.monitoring.estimateProgress(next)
+            } else {
+                this.monitoring.progression = 100
+            }
         }
-        let elapsedTime: number = Date.now() - startTime
-        this.spy.executionTime += elapsedTime
+        this.frontierNodes.refresh()
         console.log(this.solutions.results)
         console.log(this.frontierNodes.queue)
         console.log(this.visitedNodes.visitedNodes)
+    }
+
+    public stop(): void {
+        this.stopExecution = true
     }
 
     private query(query: string, graph: string, next: string): Promise<SageResponse> {
@@ -72,6 +86,5 @@ export class ServerEvalService {
                 reject(error)
             })
         })
-        
     }
 }
