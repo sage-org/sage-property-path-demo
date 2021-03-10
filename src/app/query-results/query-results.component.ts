@@ -17,12 +17,18 @@ export class QueryResultsComponent implements OnInit {
   public faAngleDoubleRight = faAngleDoubleRight
 
   public currentPage: number
+  public collapsed: boolean
 
   constructor(public solutionMappings: SolutionMappingsService) { 
     this.currentPage = 0
+    this.collapsed = true
   }
 
   ngOnInit(): void {
+  }
+
+  public collapse(): void {
+    this.collapsed = !this.collapsed
   }
 
   public numLastPage(): number {

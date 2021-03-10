@@ -1,37 +1,35 @@
-<div class="row m-0" [ngClass]="{'d-none': solutionMappings.results.length == 0}">
-    <div class="card p-0 col-12">
-        <div class="card-header">
-            <h3 class="m-0">Query results</h3>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive table-body">
-                <div class="table d-table">
-                    <thead>
-                        <tr>
-                            <th *ngFor="let variable of getVariables()">{{variable}}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let solution of getCurrentPage()">
-                            <td *ngFor="let mapping of getMappings(solution)">{{mapping}}</td>
-                        </tr>
-                    </tbody>
-                </div>
-                <div class="mb-2 d-flex justify-content-center align-items-center">
-                    <button class="btn btn-secondary mx-1" (click)="firstPage()" [disabled]="currentPage == 0"> 
-                        <fa-icon [icon]="faAngleDoubleLeft"></fa-icon>
-                    </button>
-                    <button class="btn btn-secondary mx-1" (click)="previousPage()" [disabled]="currentPage == 0">
-                        <fa-icon [icon]="faAngleLeft"></fa-icon>
-                    </button>
-                    <span class="mx-3"> Page n°{{currentPage + 1}} on {{numLastPage() + 1}} </span>
-                    <button class="btn btn-secondary mx-1" (click)="nextPage()" [disabled]="currentPage == numLastPage()">
-                        <fa-icon [icon]="faAngleRight"></fa-icon>
-                    </button>
-                    <button class="btn btn-secondary mx-1" (click)="lastPage()" [disabled]="currentPage == numLastPage()">
-                        <fa-icon [icon]="faAngleDoubleRight"></fa-icon>
-                    </button>
-                </div>
+<div class="card">
+    <div role="button" class="card-header" [ngClass]="{'collapsed': collapsed}" (click)="collapse()">
+        <span class="m-0 card-title">Query results</span>
+    </div>
+    <div class="card-body p-0" [ngClass]="{'collapse': collapsed}">
+        <div class="table-responsive table-body">
+            <div class="table d-table">
+                <thead>
+                    <tr>
+                        <th *ngFor="let variable of getVariables()">{{variable}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let solution of getCurrentPage()">
+                        <td *ngFor="let mapping of getMappings(solution)">{{mapping}}</td>
+                    </tr>
+                </tbody>
+            </div>
+            <div class="mb-2 d-flex justify-content-center align-items-center">
+                <button class="btn btn-secondary mx-1" (click)="firstPage()" [disabled]="currentPage == 0"> 
+                    <fa-icon [icon]="faAngleDoubleLeft"></fa-icon>
+                </button>
+                <button class="btn btn-secondary mx-1" (click)="previousPage()" [disabled]="currentPage == 0">
+                    <fa-icon [icon]="faAngleLeft"></fa-icon>
+                </button>
+                <span class="mx-3"> Page n°{{currentPage + 1}} on {{numLastPage() + 1}} </span>
+                <button class="btn btn-secondary mx-1" (click)="nextPage()" [disabled]="currentPage == numLastPage()">
+                    <fa-icon [icon]="faAngleRight"></fa-icon>
+                </button>
+                <button class="btn btn-secondary mx-1" (click)="lastPage()" [disabled]="currentPage == numLastPage()">
+                    <fa-icon [icon]="faAngleDoubleRight"></fa-icon>
+                </button>
             </div>
         </div>
     </div>

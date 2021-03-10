@@ -28,8 +28,8 @@ export class AppComponent {
     private serverEval: ServerEvalService, 
     private taskManager: TaskManagerService,
     private visitedNodes: VisitedNodesService,
-    private solutionMappings: SolutionMappingsService,
-    private spy: SpyService,
+    public solutionMappings: SolutionMappingsService,
+    public spy: SpyService,
     public frontierNodes: FrontierNodesService) { }
 
   ngOnInit(): void {

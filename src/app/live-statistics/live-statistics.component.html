@@ -1,28 +1,26 @@
-<div class="row m-0" [ngClass]="{'d-none': solutionMappings.results.length == 0}">
-    <div class="card p-0 col-12">
-        <div class="card-header">
-            <h3 class="m-0">Real-time Statistics</h3>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive table-body">
-                <div class="table d-table m-0">
-                    <thead>
-                        <tr>
-                            <th>Execution time</th>
-                            <th>HTTP requests</th>
-                            <th>Data transfer</th>
-                            <th>Number of results</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{{spy.executionTime}} ms</td>
-                            <td>{{spy.nbCalls}} requests</td>
-                            <td>{{spy.dataTransfer}} bytes</td>
-                            <td>{{solutionMappings.results.length}} solution mappings</td>
-                        </tr>
-                    </tbody>
-                </div>
+<div class="card">
+    <div class="card-header">
+        <span class="card-title m-0">Real-time Statistics</span>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive table-body">
+            <div class="table d-table m-0">
+                <thead>
+                    <tr>
+                        <th>Execution time</th>
+                        <th>HTTP requests</th>
+                        <th>Data transfer</th>
+                        <th>Number of results</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{spy.executionTime}} ms</td>
+                        <td>{{spy.nbCalls}} requests</td>
+                        <td>{{spy.dataTransfer}} bytes</td>
+                        <td>{{solutionMappings.results.length}} solution mappings</td>
+                    </tr>
+                </tbody>
             </div>
         </div>
     </div>

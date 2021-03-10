@@ -23,42 +23,41 @@
     </div>
 
     <div class="row m-0 mb-4">
-        <button class="btn btn-outline-success col-1" [ngClass]="{'d-none': running}" 
+        <button class="btn btn-outline-success col-2" [ngClass]="{'d-none': running}" 
             (click)="executeQuery()">
             Execute
         </button>
-        <button class="btn btn-outline-primary mr-2 col-1" [ngClass]="{'d-none': !running || frontierNodes.queue.length == 0}" 
+        <button class="btn btn-outline-primary mr-2 col-2" [ngClass]="{'d-none': !running || frontierNodes.queue.length == 0}" 
             (click)="expandFrontierNode()">
             Next
         </button>
-        <button class="btn btn-outline-warning col-1" [ngClass]="{'d-none': !running}" 
+        <button class="btn btn-outline-warning col-2" [ngClass]="{'d-none': !running}" 
             (click)="stopQuery()">
             Stop
         </button>
     </div>
 
-    <div class="row m-0 mb-4">
-        <div class="col-12 p-0">
+    <div class="row m-0 mb-4" *ngIf="spy.nbCalls > 0">
+        <div class="p-0 col-12">
             <app-live-statistics></app-live-statistics>
         </div>
-    </div>    
-
-    <div class="row m-0 mb-4">
-        <div class="col-12 p-0">
-            <router-outlet></router-outlet>
-        </div>
-    </div> 
-
-    <div class="row m-4">
-        <div class="col-12 p-0">
-            <app-query-results></app-query-results>
-        </div>
-    </div>    
+    </div>
 
     <div class="row m-0">
-        <div class="col-12 p-0">
+        <router-outlet></router-outlet>
+    </div>
+    
+    <div class="row m-0 mb-4" *ngIf="solutionMappings.results.length > 0">
+        <div class="p-0 col-12">
+            <app-query-results></app-query-results>  
+        </div>
+    </div>
+    
+    <div class="row m-0">
+        <div class="p-0 col-12">
             <app-statistics></app-statistics>
         </div>
-    </div>    
+    </div>
+
 </div>
 

@@ -71,7 +71,7 @@ export class StatisticsComponent implements OnInit {
 
     this.httpCalls = new CanvasJS.Chart("httpCallsContainer", {
       title: {
-        text: "Number of HTTP requests sent to the server"
+        text: "Number of HTTP calls"
       },
       axisY: {
         title: "Number of HTTP calls",
