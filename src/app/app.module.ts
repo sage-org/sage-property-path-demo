@@ -22,6 +22,7 @@ import { TaskManagerService } from './services/TaskManagerService';
 import { SpyService } from './services/SpyService';
 import { MonitoringService } from './services/MonitoringService';
 import { QueryProgressComponent } from './query-progress/query-progress.component';
+import { StatisticsComponent } from './statistics/statistics.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { QueryProgressComponent } from './query-progress/query-progress.componen
     QueryResultsComponent,
     LiveStatisticsComponent,
     TaskDetailComponent,
-    QueryProgressComponent
+    QueryProgressComponent,
+    StatisticsComponent
   ],
   imports: [
     BrowserModule,
