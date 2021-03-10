@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ControlTuple } from "../models/ControlTuple";
+import { InlineControlTuple } from "../models/InlineControlTuple";
 import { ExpandTask } from "../models/ExpandTask";
 
 interface ExpandTaskNode {
@@ -15,7 +15,7 @@ export class TaskManagerService {
         this.root = null
     }
 
-    private insert(path: Array<number>, node: ExpandTaskNode, query: string, controlTuple: ControlTuple): ExpandTask {
+    private insert(path: Array<number>, node: ExpandTaskNode, query: string, controlTuple: InlineControlTuple): ExpandTask {
         if (path.length == 0) {
             let newNode: ExpandTask = {
                 name: `${node.value.name}.${node.children.length}`,
@@ -33,7 +33,7 @@ export class TaskManagerService {
         }
     }
 
-    public create(parent: ExpandTask, query: string, controlTuple: ControlTuple): ExpandTask {
+    public create(parent: ExpandTask, query: string, controlTuple: InlineControlTuple): ExpandTask {
         if (parent == null) {
             let node: ExpandTask = {
                 name: "0",

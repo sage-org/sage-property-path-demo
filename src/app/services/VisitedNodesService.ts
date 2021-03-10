@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Md5 } from 'ts-md5'
-import { ControlTuple } from "../models/ControlTuple";
+import { InlineControlTuple } from "../models/InlineControlTuple";
 
 @Injectable()
 export class VisitedNodesService {
@@ -11,12 +11,12 @@ export class VisitedNodesService {
         this.visitedNodes = new Map<string, Map<string, number>>()
     }
 
-    private buildIdentifier(controlTuple: ControlTuple): string {
+    private buildIdentifier(controlTuple: InlineControlTuple): string {
         let id = `${JSON.stringify(controlTuple.context)}${controlTuple.path.predicate}`
         return Md5.hashStr(id).toString()
     }
 
-    public mustExpand(controlTuple: ControlTuple): boolean {
+    public mustExpand(controlTuple: InlineControlTuple): boolean {
         if (controlTuple.depth < controlTuple.max_depth) {
             return false
         } else {
@@ -26,7 +26,7 @@ export class VisitedNodesService {
         }
     }
 
-    public hasBeenVisited(controlTuple: ControlTuple): boolean {
+    public hasBeenVisited(controlTuple: InlineControlTuple): boolean {
         let id: string = this.buildIdentifier(controlTuple)
         if (this.visitedNodes.has(id)) {
             return this.visitedNodes.get(id).has(controlTuple.node)
@@ -35,7 +35,7 @@ export class VisitedNodesService {
         }
     }
 
-    public markAsVisited(controlTuple: ControlTuple): void {
+    public markAsVisited(controlTuple: InlineControlTuple): void {
         let id: string = this.buildIdentifier(controlTuple)
         if (!this.visitedNodes.has(id)) {
             this.visitedNodes.set(id, new Map<string, number>())
@@ -43,7 +43,7 @@ export class VisitedNodesService {
         this.visitedNodes.get(id).set(controlTuple.node, controlTuple.depth)
     }
 
-    public updateVisitedDepth(controlTuple: ControlTuple): void {
+    public updateVisitedDepth(controlTuple: InlineControlTuple): void {
         if (!this.hasBeenVisited(controlTuple)) {
             this.markAsVisited(controlTuple)
         } else {

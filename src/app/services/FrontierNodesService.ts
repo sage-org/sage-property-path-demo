@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { ControlTuple } from "../models/ControlTuple";
 import { Parser, Generator, SparqlQuery, SelectQuery, Triple, Term, BindPattern, VariableTerm, OperationExpression, LiteralTerm, BgpPattern, PropertyPath, IriTerm, BlankTerm, QuadTerm } from 'sparqljs'
 import { ExpandTask } from "../models/ExpandTask";
 import { TaskManagerService } from "./TaskManagerService";
 import { VisitedNodesService } from "./VisitedNodesService";
+import { InlineControlTuple } from "../models/InlineControlTuple";
 
 @Injectable()
 export class FrontierNodesService {
@@ -112,7 +112,7 @@ export class FrontierNodesService {
         }
     }
 
-    private matchPattern(triple: Triple, controlTuple: ControlTuple) {
+    private matchPattern(triple: Triple, controlTuple: InlineControlTuple) {
         if (this.isPropertyPath(triple.predicate)) {
             return this.formatPropertyPath(triple.predicate) === controlTuple.path.predicate
         } else {
@@ -134,7 +134,7 @@ export class FrontierNodesService {
         }
     }
 
-    public expand(node: ExpandTask, controlTuple: ControlTuple): void {
+    public expand(node: ExpandTask, controlTuple: InlineControlTuple): void {
         let queryPlan: SelectQuery = this.parseQuery(node.query)
         let expandedQuery: SelectQuery = {
             type: 'query',

@@ -1,8 +1,8 @@
-import { ControlTuple } from "./ControlTuple";
+import { CompactControlTuple } from "./CompactControlTuple";
 
 export interface SageResponse {
     bindings: Array<Object>
-    controls: Array<ControlTuple>
+    controls: Array<CompactControlTuple>
     hasNext: boolean
     next: string
 }

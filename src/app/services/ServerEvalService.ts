@@ -1,7 +1,9 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AppSettings } from "../app-settings";
+import { CompactControlTuple } from "../models/CompactControlTuple";
 import { ExpandTask } from "../models/ExpandTask";
+import { InlineControlTuple } from "../models/InlineControlTuple";
 import { SageQueryBody } from "../models/SageQueryBody";
 import { SageResponse } from "../models/SageResponse";
 import { FrontierNodesService } from "./FrontierNodesService";
@@ -40,13 +42,23 @@ export class ServerEvalService {
             // Updates solution mappings
             this.solutions.addAll(response.bindings)
             // Computes control tuples
-            for (let controlTuple of response.controls) {
-                if (this.visitedNodes.hasBeenVisited(controlTuple)) {
-                    this.visitedNodes.updateVisitedDepth(controlTuple)
-                } else {
-                    this.visitedNodes.markAsVisited(controlTuple)
-                    if (this.visitedNodes.mustExpand(controlTuple)) {
-                        this.frontierNodes.expand(node, controlTuple)
+            for (let compactControlTuple of response.controls) {
+                for (let visitedNode of compactControlTuple.nodes) {
+                    let inlineControlTuple: InlineControlTuple = {
+                        path: compactControlTuple.path,
+                        context: compactControlTuple.context,
+                        node: visitedNode.node,
+                        depth: visitedNode.depth,
+                        forward: compactControlTuple.forward,
+                        max_depth: compactControlTuple.max_depth
+                    }
+                    if (this.visitedNodes.hasBeenVisited(inlineControlTuple)) {
+                        this.visitedNodes.updateVisitedDepth(inlineControlTuple)
+                    } else {
+                        this.visitedNodes.markAsVisited(inlineControlTuple)
+                        if (this.visitedNodes.mustExpand(inlineControlTuple)) {
+                            this.frontierNodes.expand(node, inlineControlTuple)
+                        }
                     }
                 }
             }
