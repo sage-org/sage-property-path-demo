@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AppSettings } from "../app-settings";
-import { CompactControlTuple } from "../models/CompactControlTuple";
 import { ExpandTask } from "../models/ExpandTask";
 import { InlineControlTuple } from "../models/InlineControlTuple";
 import { SageQueryBody } from "../models/SageQueryBody";
@@ -11,6 +10,7 @@ import { MonitoringService } from "./MonitoringService";
 import { SolutionMappingsService } from "./SolutionMappingsService";
 import { SpyService } from "./SpyService";
 import { VisitedNodesService } from "./VisitedNodesService";
+import * as BF from 'buffer';
 
 @Injectable()
 export class ServerEvalService {
@@ -25,27 +25,25 @@ export class ServerEvalService {
         private monitoring: MonitoringService) { }
 
     public async execute(node: ExpandTask, graph: string) {
-        console.log(node.query)
         this.stopExecution = false
         this.monitoring.progression = 0
         let hasNext = true
         let next = null
-        let startTime: number = Date.now()
         while (hasNext && !this.stopExecution) {
+            let startTime: number = Date.now()
             let response: SageResponse = await this.query(node.query, graph, next)
             // Updates metrics
-            this.spy.executionTime += Date.now() - startTime
             this.spy.nbCalls++
             this.spy.dataTransfer += new TextEncoder().encode(JSON.stringify(response)).length
-            this.spy.sizeSolutionMappings += new TextEncoder().encode(JSON.stringify(response.bindings)).length
-            this.spy.sizeControlTuples += new TextEncoder().encode(JSON.stringify(response.controls)).length
+            this.spy.sizeSolutionMappings += BF.Buffer.byteLength(JSON.stringify(response.bindings), 'utf-8') - 2
+            this.spy.sizeControlTuples += BF.Buffer.byteLength(JSON.stringify(response.controls), 'utf-8') - 2
             // Updates solution mappings
             this.solutions.addAll(response.bindings)
             // Computes control tuples
             for (let compactControlTuple of response.controls) {
                 for (let visitedNode of compactControlTuple.nodes) {
                     let inlineControlTuple: InlineControlTuple = {
-                        path: compactControlTuple.path,
+                        path_pattern_id: compactControlTuple.path_pattern_id,
                         context: compactControlTuple.context,
                         node: visitedNode.node,
                         depth: visitedNode.depth,
@@ -64,6 +62,7 @@ export class ServerEvalService {
             }
             hasNext = response.hasNext
             next = response.next
+            this.spy.executionTime += Date.now() - startTime
             if (hasNext) {
                 this.monitoring.estimateProgress(next)
             } else {
@@ -71,9 +70,6 @@ export class ServerEvalService {
             }
         }
         this.frontierNodes.refresh()
-        console.log(this.solutions.results)
-        console.log(this.frontierNodes.queue)
-        console.log(this.visitedNodes.visitedNodes)
     }
 
     public stop(): void {
@@ -81,6 +77,7 @@ export class ServerEvalService {
     }
 
     private query(query: string, graph: string, next: string): Promise<SageResponse> {
+        console.log(query)
         let body: SageQueryBody = {
             query: query,
             defaultGraph: graph,

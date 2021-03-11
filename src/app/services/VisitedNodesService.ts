@@ -1,18 +1,21 @@
 import { Injectable } from "@angular/core";
 import { Md5 } from 'ts-md5'
 import { InlineControlTuple } from "../models/InlineControlTuple";
+import { PathPatternIdentifierService } from "./PathPatternIdentifierService";
 
 @Injectable()
 export class VisitedNodesService {
 
     public visitedNodes: Map<string, Map<string, number>>
 
-    constructor() {
+    constructor(private patternsIdentifier: PathPatternIdentifierService) {
         this.visitedNodes = new Map<string, Map<string, number>>()
     }
 
     private buildIdentifier(controlTuple: InlineControlTuple): string {
-        let id = `${JSON.stringify(controlTuple.context)}${controlTuple.path.predicate}`
+        let path_pattern_id = this.patternsIdentifier.get(controlTuple.path_pattern_id)
+        let context = controlTuple.context
+        let id = `${JSON.stringify(context)}${path_pattern_id}`
         return Md5.hashStr(id).toString()
     }
 

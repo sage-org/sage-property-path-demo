@@ -2,7 +2,10 @@
   <div class="col-12 p-0 mb-2">
     <label><strong>Select a RDF Graph:</strong></label>
     <div class="input-group mb-2">
-      <button class="btn btn-outline-primary rounded-0 col-3" type="button" (click)="openGraphMenu()">Graphs</button>
+      <button class="btn btn-outline-primary rounded-0 col-3" type="button" 
+        (click)="graphMenuOpen ? closeGraphMenu() : openGraphMenu()">
+        Graphs
+      </button>
       <ul class="dropdown-menu" [ngClass]="{'show': graphMenuOpen}">
         <li *ngFor="let graph of listGraphs()" role="button" (click)="selectGraph(graph)">
           <span class="dropdown-item">{{graph}}</span>
@@ -12,13 +15,18 @@
     </div>
     <label><strong>Select a SPARQL query:</strong></label>
     <div class="input-group mb-2">
-        <button class="btn btn-outline-primary rounded-0 col-3" type="button" (click)="openQueryMenu()">Queries</button>
+        <button class="btn btn-outline-primary rounded-0 col-3" type="button" 
+          (click)="queryMenuOpen ? closeQueryMenu() : openQueryMenu()">
+          Queries
+        </button>
         <ul class="dropdown-menu" [ngClass]="{'show': queryMenuOpen}">
-            <li *ngFor="let query of listGmarkQueries()" role="button" (click)="selectQuery(query)">
+            <li *ngFor="let query of listGmarkQueries()" role="button" (click)="selectGmarkQuery(query)">
               <span class="dropdown-item">{{query}}</span>
             </li>
-            <!-- <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Separated link</a></li> -->
+            <li><hr class="dropdown-divider"></li>
+            <li *ngFor="let query of listWikidataQueries()" role="button" (click)="selectWikidataQuery(query)">
+              <span class="dropdown-item">{{query}}</span>
+            </li>
         </ul>
         <input type="text" class="form-control" [ngModel]="selectedQuery">
     </div>

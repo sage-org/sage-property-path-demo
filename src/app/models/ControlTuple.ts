@@ -1,7 +1,5 @@
-import { Triple } from "./Triple";
-
 export interface ControlTuple {
-    path: Triple
+    path_pattern_id: string
     context: Object
     forward: boolean
     max_depth: number

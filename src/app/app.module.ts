@@ -13,6 +13,8 @@ import { WaitingQueriesComponent } from './waiting-queries/waiting-queries.compo
 import { QueryResultsComponent } from './query-results/query-results.component';
 import { LiveStatisticsComponent } from './live-statistics/live-statistics.component';
 import { TaskDetailComponent } from './task-detail/task-detail.component';
+import { QueryProgressComponent } from './query-progress/query-progress.component';
+import { StatisticsComponent } from './statistics/statistics.component';
 
 import { ServerEvalService } from './services/ServerEvalService';
 import { SolutionMappingsService } from './services/SolutionMappingsService';
@@ -21,8 +23,7 @@ import { FrontierNodesService } from './services/FrontierNodesService';
 import { TaskManagerService } from './services/TaskManagerService';
 import { SpyService } from './services/SpyService';
 import { MonitoringService } from './services/MonitoringService';
-import { QueryProgressComponent } from './query-progress/query-progress.component';
-import { StatisticsComponent } from './statistics/statistics.component';
+import { PathPatternIdentifierService } from './services/PathPatternIdentifierService';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { StatisticsComponent } from './statistics/statistics.component';
     FrontierNodesService,
     TaskManagerService,
     SpyService,
-    MonitoringService
+    MonitoringService,
+    PathPatternIdentifierService
   ],
   bootstrap: [AppComponent]
 })

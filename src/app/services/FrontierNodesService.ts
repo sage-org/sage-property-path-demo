@@ -1,16 +1,19 @@
 import { Injectable } from "@angular/core";
-import { Parser, Generator, SparqlQuery, SelectQuery, Triple, Term, BindPattern, VariableTerm, OperationExpression, LiteralTerm, BgpPattern, PropertyPath, IriTerm, BlankTerm, QuadTerm } from 'sparqljs'
+import { Parser, Generator, SparqlQuery, SelectQuery, Triple, Term, BindPattern, VariableTerm, OperationExpression, LiteralTerm, BgpPattern, IriTerm, BlankTerm, QuadTerm } from 'sparqljs'
 import { ExpandTask } from "../models/ExpandTask";
 import { TaskManagerService } from "./TaskManagerService";
 import { VisitedNodesService } from "./VisitedNodesService";
 import { InlineControlTuple } from "../models/InlineControlTuple";
+import { PathPatternIdentifierService } from "./PathPatternIdentifierService";
 
 @Injectable()
 export class FrontierNodesService {
 
     public queue: Array<ExpandTask>
 
-    constructor(private taskManager: TaskManagerService, private visitedNodes: VisitedNodesService) {
+    constructor(private taskManager: TaskManagerService, 
+        private visitedNodes: VisitedNodesService,
+        private patternsIdentifier: PathPatternIdentifierService) {
         this.queue = new Array<ExpandTask>()
     }
 
@@ -85,41 +88,6 @@ export class FrontierNodesService {
         }
     }
 
-    private isPropertyPath(predicate: IriTerm | VariableTerm | PropertyPath): predicate is PropertyPath {
-        return (predicate as PropertyPath).type == 'path'
-    }
-
-    private formatPropertyPath(path: PropertyPath|IriTerm): string {
-        if (this.isPropertyPath(path)) {
-            switch (path.pathType) {
-                case '^':
-                    return `Path(~${this.formatPropertyPath(path.items[0])})`
-                case '/':
-                    let sequence_items = path.items.map((subpath) => this.formatPropertyPath(subpath))
-                    return `Path(${sequence_items.join(' / ')})`
-                case '|':
-                    let alternative_items = path.items.map((subpath) => this.formatPropertyPath(subpath))
-                    return `Path(${alternative_items.join(' | ')})`
-                case '+':
-                    return `Path(${this.formatPropertyPath(path.items[0])}+)`
-                case '*':
-                    return `Path(${this.formatPropertyPath(path.items[0])}*)`
-                default:
-                    return '' // should not happen
-            }
-        } else {
-            return path.value
-        }
-    }
-
-    private matchPattern(triple: Triple, controlTuple: InlineControlTuple) {
-        if (this.isPropertyPath(triple.predicate)) {
-            return this.formatPropertyPath(triple.predicate) === controlTuple.path.predicate
-        } else {
-            return false
-        }
-    }
-
     private isVariable(term: Term | IriTerm | BlankTerm | VariableTerm | QuadTerm): term is VariableTerm {
         return (term as VariableTerm).termType === 'Variable'
     }
@@ -153,13 +121,17 @@ export class FrontierNodesService {
         let expandedTriples = new Array<Triple>() 
         let patternFound = false
         for (let triple of triples) {
-            if (this.matchPattern(triple, controlTuple)) {
+            let tripleIdentifier = this.patternsIdentifier.buildIdentifier(triple)
+            if (tripleIdentifier == controlTuple.path_pattern_id) {
                 patternFound = true
-                expandedTriples.push({
+                let rewritedTriple: Triple = {
                     subject: controlTuple.forward ? this.createIri(controlTuple.node) : triple.subject,
                     predicate: triple.predicate,
                     object: controlTuple.forward ? triple.object : this.createIri(controlTuple.node)
-                })
+                }
+                let rewritedTripleIdentifier = this.patternsIdentifier.buildIdentifier(rewritedTriple)
+                this.patternsIdentifier.sameAs(tripleIdentifier, rewritedTripleIdentifier)
+                expandedTriples.push(rewritedTriple)
             } else if (!this.isFullyBoundedPattern(triple, boundedVariables)) {
                 expandedTriples.push(triple)
             } 

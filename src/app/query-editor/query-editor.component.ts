@@ -21,7 +21,8 @@ export class QueryEditorComponent implements OnInit {
   }
 
   private graphs = {
-    'GMark': 'http://example.org/datasets/gmark'
+    'GMark': 'http://example.org/datasets/gmark',
+    'Wikidata2017': 'http://example.org/datasets/wikidata'
   }
 
   private gmarkQueries = {
@@ -32,6 +33,24 @@ WHERE {
   ?x1 ((:pauthor/^:pauthor))+ ?x2 . 
   ?x2 ((:peditor/:phomepage/^:phomepage)|(^:pincludes/:pincludes))+ ?x3 . 
   ?x3 (:peditor) ?v1 . ?v1 (:pfollows) ?v2 . ?v2 (^:pfollows) ?x4 . 
+}`
+  }
+
+  private wikidataQueries = {
+    'Female scientists': `PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX wd: <http://www.wikidata.org/entity/>
+SELECT ?item WHERE {
+    ?item wdt:P31 wd:Q5 .
+    ?item wdt:P21 wd:Q6581072 .
+    ?item wdt:P106 ?v . ?v wdt:P279* wd:Q901 .
+}`,
+    'Public scultures in Paris': `PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX wd: <http://www.wikidata.org/entity/>
+SELECT ?item
+WHERE {
+  ?item wdt:P31 ?v . ?v wdt:P279* wd:Q860861.           
+  ?item wdt:P136 wd:Q557141 . 
+  ?item wdt:P131 wd:Q90.
 }`
   }
 
@@ -70,6 +89,10 @@ WHERE {
     return Object.keys(this.gmarkQueries)
   }
 
+  public listWikidataQueries(): Array<string> {
+    return Object.keys(this.wikidataQueries)
+  }
+
   public openGraphMenu(): void {
     this.graphMenuOpen = true
   }
@@ -92,9 +115,16 @@ WHERE {
     this.onGraphChange()
   }
 
-  public selectQuery(name: string): void {
+  public selectGmarkQuery(name: string): void {
     this.selectedQuery = name
     this.query = this.gmarkQueries[name]
+    this.closeQueryMenu()
+    this.onQueryChange()
+  }
+
+  public selectWikidataQuery(name: string): void {
+    this.selectedQuery = name
+    this.query = this.wikidataQueries[name]
     this.closeQueryMenu()
     this.onQueryChange()
   }
