@@ -2,7 +2,9 @@
     <div class="card-header"> 
         <span class="card-title">Number of frontier nodes: {{frontierNodes.queue.length}}</span>
         <br>
-        <span class="card-title">Exploration of paths of length {{(currentDepth() - 1) * maxDepth}} to {{currentDepth() * maxDepth}}</span>
+        <span class="card-title">
+            Exploration of paths of length {{minLengthExploredPath()}} to {{maxLengthExploredPath()}}
+        </span>
     </div>
     <div class="card-body p-0 d-flex ">
         <button *ngFor="let task of frontierNodes.queue" 

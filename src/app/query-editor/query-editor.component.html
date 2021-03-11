@@ -11,7 +11,7 @@
           <span class="dropdown-item">{{graph}}</span>
         </li>
       </ul>
-      <input type="text" class="form-control" [(ngModel)]="graph" (ngModelChange)="onGraphChange()">
+      <input type="text" class="form-control" [(ngModel)]="configuration.graph">
     </div>
     <label><strong>Select a SPARQL query:</strong></label>
     <div class="input-group mb-2">
@@ -33,11 +33,9 @@
     <label><strong>Execution parameters:</strong></label>
     <div class="input-group mb-2">
       <span class="input-group-text rounded-0">Quantum</span>
-      <input type="number" class="form-control rounded-0" min="75" step="25"
-        [(ngModel)]="quantum" (ngModelChange)="onQuantumChange()">
+      <input type="number" class="form-control rounded-0" min="75" step="25" [(ngModel)]="configuration.quantum">
       <span class="input-group-text rounded-0">MaxDepth</span>
-      <input type="number" class="form-control" min="2" step="1"
-        [(ngModel)]="maxDepth" (ngModelChange)="onMaxDepthChange()">
+      <input type="number" class="form-control" min="2" step="1" [(ngModel)]="configuration.maxDepth">
     </div>
   </div>
   <label><strong>Write your own SPARQL query:</strong></label>
@@ -50,8 +48,7 @@
         <div class="card-body p-0">
           <ngx-codemirror #codemirror
             [options]="codeMirrorOptions"
-            [(ngModel)]="query"
-            (ngModelChange)="onQueryChange()">
+            [(ngModel)]="configuration.query">
           </ngx-codemirror>
         </div>
       </div>

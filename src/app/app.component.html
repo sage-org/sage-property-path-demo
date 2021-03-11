@@ -2,17 +2,12 @@
 <div class="container-fluid p-5">
 
     <div class="row m-0 mb-2">
-        <app-query-editor class="col-12 p-0" 
-            [(query)]="query" 
-            [(quantum)]="quantum" 
-            [(maxDepth)]="maxDepth"
-            [(graph)]="graph">
-        </app-query-editor>
+        <app-query-editor class="col-12 p-0"></app-query-editor>
     </div>
 
     <div class="row m-0 mb-2">
         <div class="col-12 p-0">
-            <app-waiting-queries [maxDepth]="maxDepth"></app-waiting-queries>
+            <app-waiting-queries></app-waiting-queries>
         </div>
     </div>
 
@@ -24,11 +19,11 @@
 
     <div class="row m-0 mb-4">
         <button class="btn btn-outline-success col-2" [ngClass]="{'d-none': running}" 
-            (click)="executeQuery()">
+            [disabled]="serverEval.isBusy()" (click)="executeQuery()">
             Execute
         </button>
         <button class="btn btn-outline-primary mr-2 col-2" [ngClass]="{'d-none': !running || frontierNodes.queue.length == 0}" 
-            (click)="expandFrontierNode()">
+            [disabled]="serverEval.isBusy()" (click)="expandFrontierNode()">
             Next
         </button>
         <button class="btn btn-outline-warning col-2" [ngClass]="{'d-none': !running}" 

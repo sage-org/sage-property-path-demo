@@ -16,17 +16,41 @@ import * as BF from 'buffer';
 export class ServerEvalService {
 
     private stopExecution: boolean
+    private busy: boolean
 
     constructor(private httpClient: HttpClient, 
         private solutions: SolutionMappingsService,
         private spy: SpyService,
         private visitedNodes: VisitedNodesService,
         private frontierNodes: FrontierNodesService,
-        private monitoring: MonitoringService) { }
+        private monitoring: MonitoringService) { 
+            this.busy = false
+        }
 
     public async execute(node: ExpandTask, graph: string) {
-        this.stopExecution = false
-        this.monitoring.progression = 0
+        try {
+            this.busy = true
+            this.stopExecution = false
+            this.monitoring.progression = 0
+            await this.excuteQuery(node, graph)
+            this.frontierNodes.refresh()
+            this.busy = false
+        } catch (error) {
+            console.log(error)
+            this.busy = false
+            throw error
+        }
+    }
+
+    public stop(): void {
+        this.stopExecution = true
+    }
+
+    public isBusy(): boolean {
+        return this.busy
+    }
+
+    private async excuteQuery(node: ExpandTask, graph: string) {
         let hasNext = true
         let next = null
         while (hasNext && !this.stopExecution) {
@@ -60,8 +84,8 @@ export class ServerEvalService {
                     }
                 }
             }
-            hasNext = response.hasNext
             next = response.next
+            hasNext = next != null
             this.spy.executionTime += Date.now() - startTime
             if (hasNext) {
                 this.monitoring.estimateProgress(next)
@@ -69,11 +93,6 @@ export class ServerEvalService {
                 this.monitoring.progression = 100
             }
         }
-        this.frontierNodes.refresh()
-    }
-
-    public stop(): void {
-        this.stopExecution = true
     }
 
     private query(query: string, graph: string, next: string): Promise<SageResponse> {

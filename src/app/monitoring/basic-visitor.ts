@@ -12,7 +12,7 @@ export class BasicVisitor extends PlanVisitor {
     }
 
     public estimatedProgress(): number {
-        return (this.progression / this.cardinality) / 100
+        return (this.progression / this.cardinality) * 100
     }
 
     protected visitScan(node: any): void {

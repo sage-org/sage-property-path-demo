@@ -37,6 +37,7 @@ export class PlanVisitor {
   
     protected visitIndexJoin(node: any): void {
         this.visitChildren(node, 'Left')
+        this.visitChildren(node, 'Right')
     }
   
     protected visitFilter(node: any): void {

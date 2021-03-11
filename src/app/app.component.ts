@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { AppSettings } from './app-settings';
 import { SpyService } from './services/SpyService';
 import { SolutionMappingsService } from './services/SolutionMappingsService';
+import { ConfigurationService } from './services/ConfigurationService';
 
 @Component({
   selector: 'app-root',
@@ -16,25 +17,19 @@ import { SolutionMappingsService } from './services/SolutionMappingsService';
 })
 export class AppComponent {
 
-  public quantum: number
-  public maxDepth: number
-  public query: string
-  public graph: string
-
   public running: boolean
 
   constructor(
     private httpClient: HttpClient,
-    private serverEval: ServerEvalService, 
+    public serverEval: ServerEvalService, 
     private taskManager: TaskManagerService,
     private visitedNodes: VisitedNodesService,
     public solutionMappings: SolutionMappingsService,
     public spy: SpyService,
-    public frontierNodes: FrontierNodesService) { }
+    public frontierNodes: FrontierNodesService,
+    private configuration: ConfigurationService) { }
 
   ngOnInit(): void {
-    this.quantum = 1500
-    this.maxDepth = 5
     this.running = false
   }
 
@@ -46,15 +41,18 @@ export class AppComponent {
 
   public executeQuery() {
     let url = `${AppSettings.SAGE_ENDPOINT}/backdoor/overwrite-config`
-    let body = { quantum: this.quantum, maxDepth: this.maxDepth }
+    let body = { 
+      quantum: this.configuration.quantum, 
+      maxDepth: this.configuration.maxDepth 
+    }
     this.spy.clear()
     this.visitedNodes.clear()
     this.frontierNodes.clear()
     this.solutionMappings.clear()
     this.running = true
     this.httpClient.post(url, body).subscribe(() => {
-      let node: ExpandTask = this.taskManager.create(null, this.query, null)
-      this.serverEval.execute(node, this.graph).then(() => {
+      let node: ExpandTask = this.taskManager.create(null, this.configuration.query, null)
+      this.serverEval.execute(node, this.configuration.graph).then(() => {
         if (this.frontierNodes.queue.length == 0) {
           this.running = false
         }
@@ -68,7 +66,7 @@ export class AppComponent {
   public expandFrontierNode() {
     let next: ExpandTask = this.frontierNodes.queue.shift()
     if (this.visitedNodes.mustExpand(next.controlTuple)) {
-      this.serverEval.execute(next, this.graph).then(() => {
+      this.serverEval.execute(next, this.configuration.graph).then(() => {
         if (this.frontierNodes.queue.length == 0) {
           this.running = false
         }

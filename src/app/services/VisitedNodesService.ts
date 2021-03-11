@@ -12,25 +12,24 @@ export class VisitedNodesService {
         this.visitedNodes = new Map<string, Map<string, number>>()
     }
 
-    private buildIdentifier(controlTuple: InlineControlTuple): string {
+    private buildPTCIdentifier(controlTuple: InlineControlTuple): string {
         let path_pattern_id = this.patternsIdentifier.get(controlTuple.path_pattern_id)
         let context = controlTuple.context
-        let id = `${JSON.stringify(context)}${path_pattern_id}`
-        return Md5.hashStr(id).toString()
+        return Md5.hashStr(`${JSON.stringify(context)}${path_pattern_id}`).toString()
     }
 
     public mustExpand(controlTuple: InlineControlTuple): boolean {
         if (controlTuple.depth < controlTuple.max_depth) {
             return false
         } else {
-            let id: string = this.buildIdentifier(controlTuple)
+            let id: string = this.buildPTCIdentifier(controlTuple)
             let depth: number = this.visitedNodes.get(id).get(controlTuple.node)
             return depth === controlTuple.depth
         }
     }
 
     public hasBeenVisited(controlTuple: InlineControlTuple): boolean {
-        let id: string = this.buildIdentifier(controlTuple)
+        let id: string = this.buildPTCIdentifier(controlTuple)
         if (this.visitedNodes.has(id)) {
             return this.visitedNodes.get(id).has(controlTuple.node)
         } else {
@@ -39,7 +38,7 @@ export class VisitedNodesService {
     }
 
     public markAsVisited(controlTuple: InlineControlTuple): void {
-        let id: string = this.buildIdentifier(controlTuple)
+        let id: string = this.buildPTCIdentifier(controlTuple)
         if (!this.visitedNodes.has(id)) {
             this.visitedNodes.set(id, new Map<string, number>())
         }
@@ -50,7 +49,7 @@ export class VisitedNodesService {
         if (!this.hasBeenVisited(controlTuple)) {
             this.markAsVisited(controlTuple)
         } else {
-            let id: string = this.buildIdentifier(controlTuple)
+            let id: string = this.buildPTCIdentifier(controlTuple)
             let depth: number = this.visitedNodes.get(id).get(controlTuple.node)
             this.visitedNodes.get(id).set(controlTuple.node, Math.min(depth, controlTuple.depth))
         }

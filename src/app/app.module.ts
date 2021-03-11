@@ -24,6 +24,7 @@ import { TaskManagerService } from './services/TaskManagerService';
 import { SpyService } from './services/SpyService';
 import { MonitoringService } from './services/MonitoringService';
 import { PathPatternIdentifierService } from './services/PathPatternIdentifierService';
+import { ConfigurationService } from './services/ConfigurationService';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { PathPatternIdentifierService } from './services/PathPatternIdentifierSe
     TaskManagerService,
     SpyService,
     MonitoringService,
-    PathPatternIdentifierService
+    PathPatternIdentifierService,
+    ConfigurationService
   ],
   bootstrap: [AppComponent]
 })

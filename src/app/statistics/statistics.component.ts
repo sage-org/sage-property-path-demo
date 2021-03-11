@@ -3,6 +3,7 @@ import { SpyService } from '../services/SpyService';
 
 import * as CanvasJS from '../../assets/lib/canvasjs/canvasjs.min.js'
 import { SolutionMappingsService } from '../services/SolutionMappingsService';
+import { ConfigurationService } from '../services/ConfigurationService';
 
 @Component({
   selector: 'app-statistics',
@@ -17,7 +18,9 @@ export class StatisticsComponent implements OnInit {
 
   private intervalIdentifier: number
 
-  constructor(private spy: SpyService, private solutionMappings: SolutionMappingsService) { }
+  constructor(private spy: SpyService, 
+    private solutionMappings: SolutionMappingsService,
+    private configuration: ConfigurationService) { }
 
   ngOnInit(): void {
     this.executionTime = new CanvasJS.Chart("executionTimeContainer", {
@@ -89,11 +92,21 @@ export class StatisticsComponent implements OnInit {
     this.dataTransfer.render()
     this.httpCalls.render()
 
-    this.intervalIdentifier = window.setInterval(this.updateCharts.bind(this), 1500)
+    this.intervalIdentifier = window.setInterval(() => {
+      if (this.spy.nbCalls > 0) {
+        this.updateCharts()
+      }
+    }, 1500)
   }
 
   ngOnDestroy(): void {
     window.clearInterval(this.intervalIdentifier)
+  }
+
+  private getCurrentLabel(): string {
+    let quantum: number = this.configuration.quantum
+    let maxDepth: number = this.configuration.maxDepth
+    return `${this.spy.timestamp}\n(${quantum}, ${maxDepth})`
   }
 
   private getBar(data: Array<any>, label: string): any {
@@ -106,9 +119,9 @@ export class StatisticsComponent implements OnInit {
   }
 
   private updateExecutionTime(): void {
-    let bar = this.getBar(this.executionTime.options.data[0].dataPoints, this.spy.name)
+    let bar = this.getBar(this.executionTime.options.data[0].dataPoints, this.getCurrentLabel())
     if (bar == null) {
-      bar = { label: this.spy.name, y: 0 }
+      bar = { label: this.getCurrentLabel(), y: 0 }
       this.executionTime.options.data[0].dataPoints.push(bar)
     }
     bar.y = this.spy.executionTime
@@ -116,9 +129,9 @@ export class StatisticsComponent implements OnInit {
   }
 
   private updateHttpCalls(): void {
-    let bar = this.getBar(this.httpCalls.options.data[0].dataPoints, this.spy.name)
+    let bar = this.getBar(this.httpCalls.options.data[0].dataPoints, this.getCurrentLabel())
     if (bar == null) {
-      bar = { label: this.spy.name, y: 0 }
+      bar = { label: this.getCurrentLabel(), y: 0 }
       this.httpCalls.options.data[0].dataPoints.push(bar)
     }
     bar.y = this.spy.nbCalls
@@ -138,23 +151,23 @@ export class StatisticsComponent implements OnInit {
       sizeSolutionMappings = sizeSolutionMappings * (nbSolutions / total)
     }
     // Updates chart
-    let controlTuplesBar = this.getBar(this.dataTransfer.options.data[0].dataPoints, this.spy.name)
+    let controlTuplesBar = this.getBar(this.dataTransfer.options.data[0].dataPoints, this.getCurrentLabel())
     if (controlTuplesBar == null) {
-      controlTuplesBar = { label: this.spy.name, y: 0 }
+      controlTuplesBar = { label: this.getCurrentLabel(), y: 0 }
       this.dataTransfer.options.data[0].dataPoints.push(controlTuplesBar)
     }
     controlTuplesBar.y = sizeControlTuples
 
-    let duplicatesBar = this.getBar(this.dataTransfer.options.data[1].dataPoints, this.spy.name)
+    let duplicatesBar = this.getBar(this.dataTransfer.options.data[1].dataPoints, this.getCurrentLabel())
     if (duplicatesBar == null) {
-      duplicatesBar = { label: this.spy.name, y: 0 }
+      duplicatesBar = { label: this.getCurrentLabel(), y: 0 }
       this.dataTransfer.options.data[1].dataPoints.push(duplicatesBar)
     }
     duplicatesBar.y = sizeDuplicates
 
-    let solutionsBar = this.getBar(this.dataTransfer.options.data[2].dataPoints, this.spy.name)
+    let solutionsBar = this.getBar(this.dataTransfer.options.data[2].dataPoints, this.getCurrentLabel())
     if (solutionsBar == null) {
-      solutionsBar = { label: this.spy.name, y: 0 }
+      solutionsBar = { label: this.getCurrentLabel(), y: 0 }
       this.dataTransfer.options.data[2].dataPoints.push(solutionsBar)
     }
     solutionsBar.y = sizeSolutionMappings

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ConfigurationService } from '../services/ConfigurationService';
 
 @Component({
   selector: 'app-query-editor',
@@ -26,14 +27,21 @@ export class QueryEditorComponent implements OnInit {
   }
 
   private gmarkQueries = {
-    'Gmark - Query 1': `PREFIX : <http://example.org/gmark/>
+    'GMark - Q26': `PREFIX : <http://example.org/gmark/> 
+SELECT ?x0 ?x3 
+WHERE { 
+  ?x0 (^:pdirector) ?v0 . ?v0 (^:ppurchaseFor) ?v1 . ?v1 (^:pmakesPurchase) ?x1 . 
+  ?x1 (^:pactor) ?v2 . ?v2 (:pactor) ?x2 . 
+  ?x2 ((^:pactor/:pdirector)|(^:pfriendOf))+ ?x3 . 
+}`,
+    'GMark - Q27': `PREFIX : <http://example.org/gmark/>
 SELECT ?x0 ?x4
 WHERE {
   ?x0 (^:plocation) ?v0 . ?v0 (^:peditor) ?x1 . 
   ?x1 ((:pauthor/^:pauthor))+ ?x2 . 
   ?x2 ((:peditor/:phomepage/^:phomepage)|(^:pincludes/:pincludes))+ ?x3 . 
   ?x3 (:peditor) ?v1 . ?v1 (:pfollows) ?v2 . ?v2 (^:pfollows) ?x4 . 
-}`
+}`  
   }
 
   private wikidataQueries = {
@@ -58,27 +66,13 @@ WHERE {
   public queryMenuOpen: boolean
   public graphMenuOpen: boolean
 
-  @Input() public query: string
-  @Output() public queryChange = new EventEmitter<string>()
-
-  @Input() public graph: string
-  @Output() public graphChange = new EventEmitter<string>()
-
-  @Input() public quantum: number
-  @Output() public quantumChange = new EventEmitter<number>()
-
-  @Input() public maxDepth: number
-  @Output() public maxDepthChange = new EventEmitter<number>()
-
-  constructor() { 
+  constructor(public configuration: ConfigurationService) { 
     this.selectedQuery = ""
     this.queryMenuOpen = false
     this.graphMenuOpen = false
   }
 
   ngOnInit(): void {
-    this.quantum = 1500
-    this.maxDepth = 5
   }
 
   public listGraphs(): Array<string> {
@@ -110,38 +104,19 @@ WHERE {
   }
 
   public selectGraph(name: string): void {
-    this.graph = this.graphs[name]
+    this.configuration.graph = this.graphs[name]
     this.closeGraphMenu()
-    this.onGraphChange()
   }
 
   public selectGmarkQuery(name: string): void {
     this.selectedQuery = name
-    this.query = this.gmarkQueries[name]
+    this.configuration.query = this.gmarkQueries[name]
     this.closeQueryMenu()
-    this.onQueryChange()
   }
 
   public selectWikidataQuery(name: string): void {
     this.selectedQuery = name
-    this.query = this.wikidataQueries[name]
+    this.configuration.query = this.wikidataQueries[name]
     this.closeQueryMenu()
-    this.onQueryChange()
-  }
-
-  public onQueryChange(): void {
-    this.queryChange.emit(this.query)
-  }
-
-  public onGraphChange(): void {
-    this.graphChange.emit(this.graph)
-  }
-
-  public onQuantumChange(): void {
-    this.quantumChange.emit(this.quantum)
-  }
-
-  public onMaxDepthChange(): void {
-    this.maxDepthChange.emit(this.maxDepth)
   }
 }
