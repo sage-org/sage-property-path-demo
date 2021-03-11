@@ -18,6 +18,7 @@ import { ConfigurationService } from './services/ConfigurationService';
 export class AppComponent {
 
   public running: boolean
+  public modeAutoOff: boolean
 
   constructor(
     private httpClient: HttpClient,
@@ -31,6 +32,7 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.running = false
+    this.modeAutoOff = true
   }
 
   public stopQuery(): void {
@@ -55,6 +57,8 @@ export class AppComponent {
       this.serverEval.execute(node, this.configuration.graph).then(() => {
         if (this.frontierNodes.queue.length == 0) {
           this.running = false
+        } else if (!this.modeAutoOff) {
+          this.expandFrontierNode()
         }
       }).catch((error: any) => {
         console.error(error)
@@ -69,6 +73,8 @@ export class AppComponent {
       this.serverEval.execute(next, this.configuration.graph).then(() => {
         if (this.frontierNodes.queue.length == 0) {
           this.running = false
+        } else if (!this.modeAutoOff) {
+          this.expandFrontierNode()
         }
       }).catch((error: any) => {
         console.error(error)

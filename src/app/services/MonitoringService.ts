@@ -20,7 +20,7 @@ export class MonitoringService {
                 let plan = RootTree.decode(BF.Buffer.from(nextLink, 'base64'))
                 let visitor = new BasicVisitor()
                 visitor.visitRoot(RootTree.toObject(plan))
-                self.progression = visitor.estimatedProgress()
+                self.progression = Math.max(self.progression, visitor.estimatedProgress())
             }
         })
     }

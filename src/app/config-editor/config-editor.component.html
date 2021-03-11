@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="p-0 col-12 col-lg-6">
+        <label><strong>Select a RDF Graph:</strong></label>
+        <div class="input-group mb-2">
+            <button class="btn btn-outline-primary rounded-0 col-3" type="button" 
+                (click)="graphMenuOpen ? closeGraphMenu() : openGraphMenu()">
+                Graphs
+            </button>
+            <ul class="dropdown-menu" [ngClass]="{'show': graphMenuOpen}">
+                <li *ngFor="let graph of listGraphs()" role="button" (click)="selectGraph(graph)">
+                    <span class="dropdown-item">{{graph}}</span>
+                </li>
+            </ul>
+            <input type="text" class="form-control" [(ngModel)]="configuration.graph">
+        </div>
+    </div>
+    <div class="p-0 col-12 col-lg-6">
+        <label><strong>Select a SPARQL query:</strong></label>
+        <div class="input-group mb-2">
+            <button class="btn btn-outline-primary rounded-0 col-3" type="button" 
+                (click)="queryMenuOpen ? closeQueryMenu() : openQueryMenu()">
+                Queries
+            </button>
+            <ul class="dropdown-menu" [ngClass]="{'show': queryMenuOpen}">
+                <li *ngFor="let query of listGmarkQueries()" role="button" (click)="selectGmarkQuery(query)">
+                    <span class="dropdown-item">{{query}}</span>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li *ngFor="let query of listWikidataQueries()" role="button" (click)="selectWikidataQuery(query)">
+                    <span class="dropdown-item">{{query}}</span>
+                </li>
+            </ul>
+            <input type="text" class="form-control" [ngModel]="selectedQuery">
+        </div>
+    </div>
+    <div class="p-0 col-12">
+        <label><strong>Execution parameters:</strong></label>
+        <div class="input-group">
+            <div class="d-flex p-0 col-12 col-md-6">
+                <span class="input-group-text justify-content-center rounded-0 col-3">Quantum</span>
+                <input type="number" class="form-control rounded-0" min="75" step="25" [(ngModel)]="configuration.quantum">
+            </div>
+            <div class="d-flex p-0 col-12 col-md-6">
+                <span class="input-group-text justify-content-center rounded-0 col-3">MaxDepth</span>
+                <input type="number" class="form-control rounded-0" min="2" step="1" [(ngModel)]="configuration.maxDepth">
+            </div>
+        </div>
+    </div>
+</div>

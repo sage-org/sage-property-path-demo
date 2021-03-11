@@ -1,6 +1,6 @@
 <div class="card">
     <div role="button" class="card-header" [ngClass]="{'collapsed': collapsed}" (click)="collapse()">
-        <span class="m-0 card-title">Query results</span>
+        <span class="m-0 card-title">Results: {{solutionMappings.results.length}} solution mappings</span>
     </div>
     <div class="card-body p-0" [ngClass]="{'collapse': collapsed}">
         <div class="table-responsive table-body">

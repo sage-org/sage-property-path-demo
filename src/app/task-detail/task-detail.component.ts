@@ -47,11 +47,11 @@ export class TaskDetailComponent implements OnInit {
     this.router.navigate(['/tasks', this.parent.name])
   }
 
-  public contextVariables(): Array<string> {
+  public getContextVariables(): Array<string> {
     return Object.keys(this.task.controlTuple.context)
   }
 
-  public contextMappings(): Array<string> {
+  public getContextMappings(): Array<string> {
     return Object.values(this.task.controlTuple.context)
   }
 

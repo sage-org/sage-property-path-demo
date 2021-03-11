@@ -25,6 +25,7 @@ import { SpyService } from './services/SpyService';
 import { MonitoringService } from './services/MonitoringService';
 import { PathPatternIdentifierService } from './services/PathPatternIdentifierService';
 import { ConfigurationService } from './services/ConfigurationService';
+import { ConfigEditorComponent } from './config-editor/config-editor.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { ConfigurationService } from './services/ConfigurationService';
     LiveStatisticsComponent,
     TaskDetailComponent,
     QueryProgressComponent,
-    StatisticsComponent
+    StatisticsComponent,
+    ConfigEditorComponent
   ],
   imports: [
     BrowserModule,

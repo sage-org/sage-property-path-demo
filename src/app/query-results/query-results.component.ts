@@ -64,16 +64,22 @@ export class QueryResultsComponent implements OnInit {
     if (this.solutionMappings.results.length == 0)  {
       return []
     } else {
-      return Object.keys(this.solutionMappings.results[0])
+      return Object.keys(this.solutionMappings.results[0]).filter((variable: string) => {
+        return variable != '?imprint'
+      })
     }
+  }
+
+  public getMappings(solution: Object): Array<string> {
+    return Object.entries(solution).filter(([variable, _]) => {
+      return variable != '?imprint'
+    }).map(([_, value]) => {
+      return value
+    })
   }
 
   public getCurrentPage(): Array<Object> {
     let offset: number = this.currentPage * this.PAGE_SIZE
     return this.solutionMappings.results.slice(offset, offset + this.PAGE_SIZE)
-  }
-
-  public getMappings(solution: Object): Array<string> {
-    return Object.values(solution)
   }
 }

@@ -39,12 +39,12 @@
                         <div class="table d-table border">
                             <thead>
                                 <tr>
-                                    <th *ngFor="let variable of contextVariables()">{{variable}}</th>
+                                    <th *ngFor="let variable of getContextVariables()">{{variable}}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td *ngFor="let mapping of contextMappings()">{{mapping}}</td>
+                                    <td *ngFor="let mapping of getContextMappings()">{{mapping}}</td>
                                 </tr>
                             </tbody>
                         </div>

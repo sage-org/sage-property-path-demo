@@ -1,16 +1,19 @@
 <div class="card">
-    <div class="card-header"> 
-        <span class="card-title">Number of frontier nodes: {{frontierNodes.queue.length}}</span>
-        <br>
-        <span class="card-title">
-            Exploration of paths of length {{minLengthExploredPath()}} to {{maxLengthExploredPath()}}
-        </span>
+    <div class="card-header d-flex"> 
+        <!-- <div class="row col-6"> -->
+            <span class="card-title m-0">Number of frontier nodes: {{frontierNodes.queue.length}}</span>
+        <!-- </div> -->
+        <!-- <div class="row col-6 justify-content-end">
+            <span class="card-title m-0">
+                Exploration of paths of length {{minLengthExploredPath()}} to {{maxLengthExploredPath()}}
+            </span>
+        </div>         -->
     </div>
     <div class="card-body p-0 d-flex ">
         <button *ngFor="let task of frontierNodes.queue" 
             class="btn m-2 col-2 d-flex align-items-center justify-content-center"
             [ngClass]="{'btn-primary': getDepth(task) % 2 == 0, 'btn-info': getDepth(task) % 2 != 0}"
-            (click)="showDetail(task)">
+            (click)="explainRewriting(task)">
             query-{{task.name}}
         </button>
     </div>

@@ -28,9 +28,7 @@ export class StatisticsComponent implements OnInit {
 
   ngOnInit(): void {
     this.executionTime = new CanvasJS.Chart("executionTimeContainer", {
-      title: {
-        text: "Execution time"
-      },
+      // title: { text: "Execution time" },
       axisY: {
         title: "Execution time",
         includeZero: true,
@@ -45,30 +43,28 @@ export class StatisticsComponent implements OnInit {
     })
 
     this.dataTransfer = new CanvasJS.Chart("dataTransferContainer", {
-      title: {
-        text: "Amount of data transferred"
-      },
+      // title: { text: "Amount of data transferred" },
       axisY: {
         title: "Data transfer",
         includeZero: true,
         suffix: "KBytes"
       },
       data: [{
-        type: "stackedBar",
+        type: "stackedColumn",
         name: "Control tuples",
         showInLegend: "true",
         yValueFormatString: "#KB",
         dataPoints: []
       },
       {
-        type: "stackedBar",
+        type: "stackedColumn",
         name: "Duplicates",
         showInLegend: "true",
         yValueFormatString: "#KB",
         dataPoints: []
       },
       {
-        type: "stackedBar",
+        type: "stackedColumn",
         name: "Solution mappings",
         showInLegend: "true",
         yValueFormatString: "#KB",
@@ -77,9 +73,7 @@ export class StatisticsComponent implements OnInit {
     })
 
     this.httpCalls = new CanvasJS.Chart("httpCallsContainer", {
-      title: {
-        text: "Number of HTTP calls"
-      },
+      // title: { text: "Number of HTTP calls" },
       axisY: {
         title: "Number of HTTP calls",
         includeZero: true
@@ -91,14 +85,21 @@ export class StatisticsComponent implements OnInit {
         dataPoints: []
       }]
     })
-      
+
     this.executionTime.render()
     this.dataTransfer.render()
     this.httpCalls.render()
 
+    let creditTags = document.getElementsByClassName('canvasjs-chart-credit')
+    for (let index = 0; index < creditTags.length; index++) {
+      creditTags.item(index).classList.add('d-none')
+    }
+
     this.serverEval.onStatsUpdated.subscribe((updated: boolean) => {
       if (updated) {
-        this.updateCharts()
+        this.updateExecutionTime()
+        this.updateHttpCalls()
+        this.updateDataTransfer()
       }
     })
   }
@@ -107,10 +108,16 @@ export class StatisticsComponent implements OnInit {
     this.subscription.unsubscribe()
   }
 
+  // private getCurrentLabel(): string {
+  //   let quantum: number = this.configuration.quantum
+  //   let maxDepth: number = this.configuration.maxDepth
+  //   return `${this.spy.timestamp}\n(${quantum}, ${maxDepth})`
+  // }
+
   private getCurrentLabel(): string {
     let quantum: number = this.configuration.quantum
     let maxDepth: number = this.configuration.maxDepth
-    return `${this.spy.timestamp}\n(${quantum}, ${maxDepth})`
+    return `(${quantum}, ${maxDepth})`
   }
 
   private getBar(data: Array<any>, label: string): any {
@@ -177,11 +184,5 @@ export class StatisticsComponent implements OnInit {
     solutionsBar.y = sizeSolutionMappings
 
     this.dataTransfer.render()
-  }
-
-  private updateCharts(): void {
-    this.updateExecutionTime()
-    this.updateHttpCalls()
-    this.updateDataTransfer()
   }
 }

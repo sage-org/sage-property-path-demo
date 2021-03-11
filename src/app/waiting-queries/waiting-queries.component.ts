@@ -41,7 +41,7 @@ export class WaitingQueriesComponent implements OnInit {
     return this.currentDepth() * this.configuration.maxDepth
   }
 
-  public showDetail(task: ExpandTask): void {
+  public explainRewriting(task: ExpandTask): void {
     if (this.openTask != null && this.openTask.name == task.name) {
       this.router.navigate(['/'])
       this.openTask = null

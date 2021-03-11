@@ -1,40 +1,42 @@
+<div class="container-fluid p-4">
 
-<div class="container-fluid p-5">
-
-    <div class="row m-0 mb-2">
-        <app-query-editor class="col-12 p-0"></app-query-editor>
+    <div class="row m-0 mb-3">
+        <app-config-editor class="col-12 p-0"></app-config-editor>
     </div>
 
-    <div class="row m-0 mb-2">
-        <div class="col-12 p-0">
-            <app-waiting-queries></app-waiting-queries>
+    <div class="row m-0 mb-3">
+        <div class="col-12 col-xl-6 mb-2 mb-xl-0 p-0">
+            <app-query-editor></app-query-editor>
         </div>
-    </div>
-
-    <div class="row m-0 mb-2">
-        <div class="col-12 p-0">
-            <app-query-progress></app-query-progress>
-        </div>
-    </div>
-
-    <div class="row m-0 mb-4">
-        <button class="btn btn-outline-success col-2" [ngClass]="{'d-none': running}" 
-            [disabled]="serverEval.isBusy()" (click)="executeQuery()">
-            Execute
-        </button>
-        <button class="btn btn-outline-primary mr-2 col-2" [ngClass]="{'d-none': !running || frontierNodes.queue.length == 0}" 
-            [disabled]="serverEval.isBusy()" (click)="expandFrontierNode()">
-            Next
-        </button>
-        <button class="btn btn-outline-warning col-2" [ngClass]="{'d-none': !running}" 
-            (click)="stopQuery()">
-            Stop
-        </button>
-    </div>
-
-    <div class="row m-0 mb-4" *ngIf="spy.nbCalls > 0">
-        <div class="p-0 col-12">
-            <app-live-statistics></app-live-statistics>
+        <div class="p-0 col-12 col-xl-6 pl-xl-2 pr-xl-0">
+            <div class="mb-2">
+                <app-live-statistics></app-live-statistics>
+            </div>
+            <div class="mb-2">
+                <app-waiting-queries></app-waiting-queries>
+            </div>
+            <div class="mb-2">
+                <app-query-progress></app-query-progress>
+            </div>
+            <div class="row m-0 d-flex align-items-center">
+                <button class="btn btn-outline-success col-2" [ngClass]="{'d-none': running}" 
+                    [disabled]="serverEval.isBusy()" (click)="executeQuery()">
+                    Execute
+                </button>
+                <button class="btn btn-outline-primary mr-2 col-2" [ngClass]="{'d-none': !running || frontierNodes.queue.length == 0}" 
+                    [disabled]="serverEval.isBusy()" (click)="expandFrontierNode()">
+                    Next
+                </button>
+                <button class="btn btn-outline-warning col-2" [ngClass]="{'d-none': !running}" 
+                    (click)="stopQuery()">
+                    Stop
+                </button>
+                <div class="form-check ml-4">
+                    <input type="checkbox" class="form-check-input" [(ngModel)]="modeAutoOff" checked>
+                    <label class="form-check-label">Step by step</label>
+                </div>
+            </div>
+            
         </div>
     </div>
 
@@ -44,7 +46,7 @@
         </div>
     </div>
     
-    <div class="row m-0 mb-4" *ngIf="solutionMappings.results.length > 0">
+    <div class="row m-0 mb-3" *ngIf="solutionMappings.results.length > 0">
         <div class="p-0 col-12">
             <app-query-results></app-query-results>  
         </div>
@@ -57,4 +59,3 @@
     </div>
 
 </div>
-

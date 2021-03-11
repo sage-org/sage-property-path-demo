@@ -1,57 +1,11 @@
-<div>
-  <div class="col-12 p-0 mb-2">
-    <label><strong>Select a RDF Graph:</strong></label>
-    <div class="input-group mb-2">
-      <button class="btn btn-outline-primary rounded-0 col-3" type="button" 
-        (click)="graphMenuOpen ? closeGraphMenu() : openGraphMenu()">
-        Graphs
-      </button>
-      <ul class="dropdown-menu" [ngClass]="{'show': graphMenuOpen}">
-        <li *ngFor="let graph of listGraphs()" role="button" (click)="selectGraph(graph)">
-          <span class="dropdown-item">{{graph}}</span>
-        </li>
-      </ul>
-      <input type="text" class="form-control" [(ngModel)]="configuration.graph">
-    </div>
-    <label><strong>Select a SPARQL query:</strong></label>
-    <div class="input-group mb-2">
-        <button class="btn btn-outline-primary rounded-0 col-3" type="button" 
-          (click)="queryMenuOpen ? closeQueryMenu() : openQueryMenu()">
-          Queries
-        </button>
-        <ul class="dropdown-menu" [ngClass]="{'show': queryMenuOpen}">
-            <li *ngFor="let query of listGmarkQueries()" role="button" (click)="selectGmarkQuery(query)">
-              <span class="dropdown-item">{{query}}</span>
-            </li>
-            <li><hr class="dropdown-divider"></li>
-            <li *ngFor="let query of listWikidataQueries()" role="button" (click)="selectWikidataQuery(query)">
-              <span class="dropdown-item">{{query}}</span>
-            </li>
-        </ul>
-        <input type="text" class="form-control" [ngModel]="selectedQuery">
-    </div>
-    <label><strong>Execution parameters:</strong></label>
-    <div class="input-group mb-2">
-      <span class="input-group-text rounded-0">Quantum</span>
-      <input type="number" class="form-control rounded-0" min="75" step="25" [(ngModel)]="configuration.quantum">
-      <span class="input-group-text rounded-0">MaxDepth</span>
-      <input type="number" class="form-control" min="2" step="1" [(ngModel)]="configuration.maxDepth">
-    </div>
+<div class="card p-0 col-12">
+  <div class="card-header">
+      <span class="card-title">Query editor</span>
   </div>
-  <label><strong>Write your own SPARQL query:</strong></label>
-  <div class="col-12 p-0">
-    <div class="row m-0 d-flex justify-content-center">
-      <div class="card p-0 col-12">
-        <div class="card-header">
-            <span class="card-title">Query editor</span>
-        </div>
-        <div class="card-body p-0">
-          <ngx-codemirror #codemirror
-            [options]="codeMirrorOptions"
-            [(ngModel)]="configuration.query">
-          </ngx-codemirror>
-        </div>
-      </div>
-    </div>
+  <div class="card-body p-0">
+    <ngx-codemirror #codemirror
+      [options]="codeMirrorOptions"
+      [(ngModel)]="configuration.query">
+    </ngx-codemirror>
   </div>
 </div>
