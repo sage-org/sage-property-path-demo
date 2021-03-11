@@ -1,15 +1,18 @@
 import { Injectable } from "@angular/core";
 import { IriTerm, PropertyPath, Triple } from "sparqljs";
 import { Md5 } from 'ts-md5';
+import { PathPattern } from "../models/PathPattern";
 import { isPropertyPath } from "../utils";
 
 @Injectable()
 export class PathPatternIdentifierService {
 
     private identifiers: Map<string, string>
+    private id2triple: Map<string, PathPattern>
 
     constructor() {
         this.identifiers = new Map<string, string>()
+        this.id2triple = new Map<string, PathPattern>()
     }
 
     private formatPropertyPath(path: PropertyPath | IriTerm): string {
@@ -56,6 +59,11 @@ export class PathPatternIdentifierService {
         if (!this.identifiers.has(identifier)) { // this is the original query path pattern
             this.identifiers.set(identifier, identifier)
         }
+        this.id2triple.set(identifier, {
+            subject: subject,
+            predicate: predicate,
+            object: object
+        })
         return identifier
     }
 
@@ -66,5 +74,9 @@ export class PathPatternIdentifierService {
 
     public get(identifier: string): string {
         return this.identifiers.get(identifier)
+    }
+
+    public getTriple(identifier: string): PathPattern {
+        return this.id2triple.get(identifier)
     }
 }

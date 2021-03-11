@@ -11,12 +11,16 @@ import { SolutionMappingsService } from "./SolutionMappingsService";
 import { SpyService } from "./SpyService";
 import { VisitedNodesService } from "./VisitedNodesService";
 import * as BF from 'buffer';
+import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable()
 export class ServerEvalService {
 
     private stopExecution: boolean
     private busy: boolean
+
+    private statsUpdated: BehaviorSubject<boolean>
+    public onStatsUpdated: Observable<boolean> 
 
     constructor(private httpClient: HttpClient, 
         private solutions: SolutionMappingsService,
@@ -25,6 +29,8 @@ export class ServerEvalService {
         private frontierNodes: FrontierNodesService,
         private monitoring: MonitoringService) { 
             this.busy = false
+            this.statsUpdated = new BehaviorSubject<boolean>(false)
+            this.onStatsUpdated = this.statsUpdated.asObservable()
         }
 
     public async execute(node: ExpandTask, graph: string) {
@@ -87,6 +93,7 @@ export class ServerEvalService {
             next = response.next
             hasNext = next != null
             this.spy.executionTime += Date.now() - startTime
+            this.statsUpdated.next(true)
             if (hasNext) {
                 this.monitoring.estimateProgress(next)
             } else {

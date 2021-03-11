@@ -39,7 +39,9 @@
     </div>
 
     <div class="row m-0">
-        <router-outlet></router-outlet>
+        <div class="p-0 col-12">
+            <router-outlet></router-outlet>
+        </div>
     </div>
     
     <div class="row m-0 mb-4" *ngIf="solutionMappings.results.length > 0">

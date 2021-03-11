@@ -4,6 +4,8 @@ import { SpyService } from '../services/SpyService';
 import * as CanvasJS from '../../assets/lib/canvasjs/canvasjs.min.js'
 import { SolutionMappingsService } from '../services/SolutionMappingsService';
 import { ConfigurationService } from '../services/ConfigurationService';
+import { ServerEvalService } from '../services/ServerEvalService';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-statistics',
@@ -16,9 +18,11 @@ export class StatisticsComponent implements OnInit {
   private dataTransfer: CanvasJS.Chart
   private httpCalls: CanvasJS.Chart
 
-  private intervalIdentifier: number
+  private subscription: Subscription
 
-  constructor(private spy: SpyService, 
+  constructor(
+    private serverEval: ServerEvalService,
+    private spy: SpyService, 
     private solutionMappings: SolutionMappingsService,
     private configuration: ConfigurationService) { }
 
@@ -92,15 +96,15 @@ export class StatisticsComponent implements OnInit {
     this.dataTransfer.render()
     this.httpCalls.render()
 
-    this.intervalIdentifier = window.setInterval(() => {
-      if (this.spy.nbCalls > 0) {
+    this.serverEval.onStatsUpdated.subscribe((updated: boolean) => {
+      if (updated) {
         this.updateCharts()
       }
-    }, 1500)
+    })
   }
 
   ngOnDestroy(): void {
-    window.clearInterval(this.intervalIdentifier)
+    this.subscription.unsubscribe()
   }
 
   private getCurrentLabel(): string {
