@@ -12,6 +12,12 @@ import { FrontierNodesService } from '../services/FrontierNodesService';
 export class WaitingQueriesComponent implements OnInit {
 
   private openTask: ExpandTask
+  private colors = [
+    'rgb(0 185 255)',
+    'rgb(0 145 255)',
+    'rgb(0 105 255)',
+    'rgb(0 65 255)'
+  ]
 
   constructor(public frontierNodes: FrontierNodesService,
     private configuration: ConfigurationService, 
@@ -21,8 +27,17 @@ export class WaitingQueriesComponent implements OnInit {
     
   }
 
-  public getDepth(task: ExpandTask): number {
+  private getDepth(task: ExpandTask): number {
     return task.name.split('.').length
+  }
+
+  public getBackgroundColor(task: ExpandTask): string {
+    let depth = this.getDepth(task) - 2
+    if (depth < this.colors.length) {
+      return this.colors[depth]
+    } else {
+      return this.colors[this.colors.length - 1]
+    }
   }
 
   private currentDepth(): number {

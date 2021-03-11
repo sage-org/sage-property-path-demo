@@ -36,6 +36,7 @@ export class StatisticsComponent implements OnInit {
       },
       data: [{
         type: "column",	
+        color: "MediumPurple",
         yValueFormatString: "#ms",
         indexLabel: "{y}",
         dataPoints: []
@@ -80,6 +81,7 @@ export class StatisticsComponent implements OnInit {
       },
       data: [{
         type: "column",	
+        color: "MediumPurple",
         yValueFormatString: "# calls",
         indexLabel: "{y}",
         dataPoints: []
@@ -107,12 +109,6 @@ export class StatisticsComponent implements OnInit {
   ngOnDestroy(): void {
     this.subscription.unsubscribe()
   }
-
-  // private getCurrentLabel(): string {
-  //   let quantum: number = this.configuration.quantum
-  //   let maxDepth: number = this.configuration.maxDepth
-  //   return `${this.spy.timestamp}\n(${quantum}, ${maxDepth})`
-  // }
 
   private getCurrentLabel(): string {
     let quantum: number = this.configuration.quantum
