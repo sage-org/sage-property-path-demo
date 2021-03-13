@@ -15,7 +15,7 @@ exploration.  In this way, SaGe-Path follows a pay-as-you-go approach
 to evaluate SPARQL property path queries.
 
 This demonstration shows how queries that do not complete on
-the public Wikidata SPARQL endpoint can  complete using \pass. An extended user-interface provides real-time
+the public Wikidata SPARQL endpoint can  complete using SaGe-Path. An extended user-interface provides real-time
 visualizations of all SaGe-Path  internals, allowing to understand
 overheads, and the effects of  different parameters on
 performances. SaGe-Path  demonstrates how complex SPARQL property path queries can be
