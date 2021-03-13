@@ -39,13 +39,19 @@ SELECT ?item WHERE {
     ?item wdt:P21 wd:Q6581072 .
     ?item wdt:P106 ?v . ?v wdt:P279* wd:Q901 .
 }`,
-    'Public scultures in Paris': `PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+    'People born in New York': `PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 PREFIX wd: <http://www.wikidata.org/entity/>
-SELECT ?item
-WHERE {
-  ?item wdt:P31 ?v . ?v wdt:P279* wd:Q860861.           
-  ?item wdt:P136 wd:Q557141 . 
-  ?item wdt:P131 wd:Q90.
+select ?item ?birthPlace where {
+  ?item wdt:P31 wd:Q5 .
+  ?item wdt:P19 ?birthPlace . 
+  ?birthPlace wdt:P131* wd:Q60 . 
+}`,
+    'Cities connected to Paramaribo by main roads': `PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX wd: <http://www.wikidata.org/entity/>
+select ?connectedWith ?coor where {
+  ?connection wdt:P2789+ wd:Q3001 .
+  ?connection wdt:P2789+ ?connectedWith .
+  ?connectedWith wdt:P625 ?coor .
 }`,
     'Creative works with the fictional works that inspired them': `PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 PREFIX wd: <http://www.wikidata.org/entity/>
@@ -60,13 +66,12 @@ SELECT ?artWork ?otherWork WHERE {
   public queryMenuOpen: boolean
   public graphMenuOpen: boolean
 
-  constructor(public configuration: ConfigurationService) { 
+  constructor(public configuration: ConfigurationService) { }
+
+  ngOnInit(): void {
     this.selectedQuery = ""
     this.queryMenuOpen = false
     this.graphMenuOpen = false
-  }
-
-  ngOnInit(): void {
   }
 
   public listGraphs(): Array<string> {

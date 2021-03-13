@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Parser, Generator, SparqlQuery, SelectQuery, Triple, Term, BindPattern, VariableTerm, OperationExpression, LiteralTerm, BgpPattern, IriTerm, BlankTerm, QuadTerm } from 'sparqljs'
+import { Parser, Generator, SparqlQuery, SelectQuery, Triple, Term, BindPattern, VariableTerm, OperationExpression, LiteralTerm, BgpPattern, IriTerm, BlankTerm, QuadTerm, Expression } from 'sparqljs'
 import { ExpandTask } from "../models/ExpandTask";
 import { TaskManagerService } from "./TaskManagerService";
 import { VisitedNodesService } from "./VisitedNodesService";
@@ -73,11 +73,25 @@ export class FrontierNodesService {
         }
     }
 
+    private createStrOperation(value: string): OperationExpression {
+        return {
+            type: 'operation',
+            operator: 'str',
+            args: [ this.createLiteral(value) ]
+        }
+    }
+
     private createBindPattern(variable: string, value: string): BindPattern {
+        let expression: Expression
+        if (value.startsWith('http')) {
+            expression = this.createIriOperation(value)
+        } else {
+            expression = this.createStrOperation(value)
+        }
         return {
             type: 'bind',
             variable: this.createVariable(variable),
-            expression: this.createIriOperation(value)
+            expression: expression
         }
     }
 

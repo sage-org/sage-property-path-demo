@@ -1,6 +1,6 @@
 <div class="card">
     <div role="button" class="card-header" [ngClass]="{'collapsed': collapsed}" (click)="collapse()">
-        <span class="m-0 card-title">Results: {{solutionMappings.results.length}} solution mappings</span>
+        <span class="m-0 card-title">Result: {{solutionMappings.results.length}} solution mappings</span>
     </div>
     <div class="card-body p-0" [ngClass]="{'collapse': collapsed}">
         <div class="table-responsive table-body">
@@ -12,7 +12,10 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let solution of getCurrentPage()">
-                        <td *ngFor="let mapping of getMappings(solution)">{{mapping}}</td>
+                        <td *ngFor="let mapping of getMappings(solution)">
+                            <a *ngIf="mapping.startsWith('http')" target="_blank" href="{{mapping}}">{{mapping}}</a>
+                            <span *ngIf="!mapping.startsWith('http')">{{mapping}}</span>
+                        </td>
                     </tr>
                 </tbody>
             </div>

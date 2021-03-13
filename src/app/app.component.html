@@ -1,5 +1,7 @@
 <div class="container-fluid p-4">
 
+    <h2 class="mb-3">SaGe-Path: A pay-as-you-go SPARQL Property Path Query Processor using Web Preemption</h2>
+
     <div class="row m-0 mb-3">
         <app-config-editor class="col-12 p-0"></app-config-editor>
     </div>
@@ -20,14 +22,14 @@
             </div>
             <div class="row m-0 d-flex align-items-center">
                 <button class="btn btn-outline-success col-2" [ngClass]="{'d-none': running}" 
-                    [disabled]="serverEval.isBusy()" (click)="executeQuery()">
+                    [disabled]="!readyToExecute()" (click)="executeQuery()">
                     Execute
                 </button>
                 <button class="btn btn-outline-primary mr-2 col-2" [ngClass]="{'d-none': !running || frontierNodes.queue.length == 0}" 
-                    [disabled]="serverEval.isBusy()" (click)="expandFrontierNode()">
+                    [disabled]="!readyToExecute()" (click)="expandFrontierNode()">
                     Next
                 </button>
-                <button class="btn btn-outline-warning col-2" [ngClass]="{'d-none': !running}" 
+                <button class="btn btn-outline-danger col-2" [ngClass]="{'d-none': !running}" 
                     (click)="stopQuery()">
                     Stop
                 </button>

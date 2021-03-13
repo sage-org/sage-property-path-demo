@@ -7,7 +7,7 @@
     </div>
     <div class="card-body p-0 d-flex ">
         <button *ngFor="let task of frontierNodes.queue" 
-            class="btn m-2 col-2 d-flex align-items-center justify-content-center"
+            class="btn m-2 col-3 d-flex align-items-center justify-content-center"
             [ngStyle]="{'background-color': getBackgroundColor(task)}"
             (click)="explainRewriting(task)">
             query-{{task.name}}

@@ -1,9 +1,9 @@
-<div class="col-12 p-0" *ngIf="parent && task">
-    <div class="row m-0">
-        <h3>Rewriting details</h3>
+<div class="card mb-3 p-0 col-12" *ngIf="parent && task">
+    <div class="card-header">
+        <h4 class="m-0">Rewriting details</h4>
     </div>
-    <div class="row m-0 d-flex">
-        <div class="card p-0 mb-2 col-12 col-lg-6">
+    <div class="card-body row m-0 d-flex">
+        <div class="card p-0 col-12 col-lg-6">
             <div class="card-header" role="button" (click)="navigateToParent()">
                 <h5>Previous query: query-{{parent.name}}</h5>
             </div>
@@ -14,7 +14,7 @@
                 </ngx-codemirror>
             </div>
         </div>
-        <div class="card p-0 mb-2 col-12 order-lg-3">
+        <div class="card p-0 mt-2 mb-2 col-12 mb-lg-0 order-lg-3">
             <div class="card-header">
                 <h5>Control tuple</h5>
             </div>
@@ -28,7 +28,7 @@
                     <span><strong>Object: </strong>{{getPathPattern().object}}</span>
                 </div>
                 <div class="mb-3">
-                    <h4>Frontier node to expand</h4>
+                    <h4>Visited node</h4>
                     <span><strong>Node: </strong>{{task.controlTuple.node}}</span>
                     <br>
                     <span><strong>Reached at depth: </strong>{{task.controlTuple.depth}}</span>
@@ -53,7 +53,7 @@
                 </div>
             </div>
         </div>
-        <div class="card p-0 mb-2 col-12 col-lg-6 order-lg-2" *ngIf="task">
+        <div class="card p-0 col-12 col-lg-6 order-lg-2" *ngIf="task">
             <div class="card-header">
                 <h5>Expanded query: query-{{task.name}}</h5>
             </div>

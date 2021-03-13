@@ -22,17 +22,23 @@ export class AppComponent {
 
   constructor(
     private httpClient: HttpClient,
-    public serverEval: ServerEvalService, 
+    private serverEval: ServerEvalService, 
     private taskManager: TaskManagerService,
     private visitedNodes: VisitedNodesService,
     public solutionMappings: SolutionMappingsService,
-    public spy: SpyService,
+    private spy: SpyService,
     public frontierNodes: FrontierNodesService,
     private configuration: ConfigurationService) { }
 
   ngOnInit(): void {
     this.running = false
     this.modeAutoOff = true
+  }
+
+  public readyToExecute(): boolean {
+    return this.configuration.graph.length > 0
+        && this.configuration.query.length > 0
+        && !this.serverEval.isBusy()
   }
 
   public stopQuery(): void {

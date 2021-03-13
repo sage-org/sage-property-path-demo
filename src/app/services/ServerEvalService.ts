@@ -59,9 +59,12 @@ export class ServerEvalService {
     private async excuteQuery(node: ExpandTask, graph: string) {
         let hasNext = true
         let next = null
-        while (hasNext && !this.stopExecution) {
+        while (hasNext) {
             let startTime: number = Date.now()
             let response: SageResponse = await this.query(node.query, graph, next)
+            if (this.stopExecution) {
+                break
+            }
             // Updates metrics
             this.spy.nbCalls++
             this.spy.dataTransfer += new TextEncoder().encode(JSON.stringify(response)).length

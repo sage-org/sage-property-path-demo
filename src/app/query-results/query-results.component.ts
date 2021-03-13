@@ -19,12 +19,11 @@ export class QueryResultsComponent implements OnInit {
   public currentPage: number
   public collapsed: boolean
 
-  constructor(public solutionMappings: SolutionMappingsService) { 
-    this.currentPage = 0
-    this.collapsed = true
-  }
+  constructor(public solutionMappings: SolutionMappingsService) { }
 
   ngOnInit(): void {
+    this.currentPage = 0
+    this.collapsed = true
   }
 
   public collapse(): void {
