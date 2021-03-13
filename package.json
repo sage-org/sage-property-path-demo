@@ -26,7 +26,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "@ng-bootstrap/ng-bootstrap": "^9.0.2",
     "bootstrap": "^4.5.0",
-    "Buffer": "^0.0.0",
+    "buffer": "^5.7.1",
     "codemirror": "^5.59.4",
     "protobufjs": "^6.10.2",
     "rxjs": "~6.6.0",
