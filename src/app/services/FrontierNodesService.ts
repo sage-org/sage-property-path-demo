@@ -47,7 +47,7 @@ export class FrontierNodesService {
         let expandedTriples = new Array<Triple>() 
         let patternFound = false
         for (let triple of triples) {
-            let tripleIdentifier = this.patternsIdentifier.buildIdentifier(triple)
+            let tripleIdentifier = this.patternsIdentifier.getTripleIdentifier(triple)
             if (tripleIdentifier == controlTuple.path_pattern_id) {
                 patternFound = true
                 let rewritedTriple: Triple = {
@@ -55,8 +55,7 @@ export class FrontierNodesService {
                     predicate: triple.predicate,
                     object: controlTuple.forward ? triple.object : createIri(controlTuple.node)
                 }
-                let rewritedTripleIdentifier = this.patternsIdentifier.buildIdentifier(rewritedTriple)
-                this.patternsIdentifier.sameAs(tripleIdentifier, rewritedTripleIdentifier)
+                this.patternsIdentifier.registerRewritedPathPattern(triple, rewritedTriple)
                 expandedTriples.push(rewritedTriple)
             } else if (!this.isFullyBoundedPattern(triple, boundedVariables)) {
                 expandedTriples.push(triple)

@@ -1,18 +1,16 @@
 import { Injectable } from "@angular/core";
-import { IriTerm, PropertyPath, Triple } from "sparqljs";
+import { IriTerm, PropertyPath, SelectQuery, Triple } from "sparqljs";
 import { Md5 } from 'ts-md5';
 import { PathPattern } from "../models/PathPattern";
-import { isPropertyPath } from "../utils";
+import { isPropertyPath, parseQuery } from "../utils";
 
 @Injectable()
 export class PathPatternIdentifierService {
 
     private identifiers: Map<string, string>
-    private id2triple: Map<string, PathPattern>
 
     constructor() {
         this.identifiers = new Map<string, string>()
-        this.id2triple = new Map<string, PathPattern>()
     }
 
     private formatPropertyPath(path: PropertyPath | IriTerm): string {
@@ -38,7 +36,7 @@ export class PathPatternIdentifierService {
         }
     }
 
-    public buildIdentifier(triple: Triple): string {
+    public getTripleIdentifier(triple: Triple): string {
         let subject: string = ""
         let predicate: string = ""
         let object: string = ""
@@ -55,28 +53,28 @@ export class PathPatternIdentifierService {
         } else {
             object = triple.object.value
         }
-        let identifier = Md5.hashStr(`${subject}${predicate}${object}`) as string
-        if (!this.identifiers.has(identifier)) { // this is the original query path pattern
-            this.identifiers.set(identifier, identifier)
+        return Md5.hashStr(`${subject}${predicate}${object}`) as string
+    }
+
+    public registerOriginalQueryPathPatterns(query: string): void {
+        let queryPlan: SelectQuery = parseQuery(query)
+        for (let clause of queryPlan.where) {
+            if (clause.type == 'bgp') {
+                for (let triple of clause.triples) {
+                    let identifier = this.getTripleIdentifier(triple)
+                    this.identifiers.set(identifier, identifier)
+                }
+            }
         }
-        this.id2triple.set(identifier, {
-            subject: subject,
-            predicate: predicate,
-            object: object
-        })
-        return identifier
     }
 
-    public sameAs(parentIdentifier: string, childIdentifier: string): void {
-        let rootIdentifier = this.get(parentIdentifier) // get the identifier of the original query path pattern
-        this.identifiers.set(childIdentifier, rootIdentifier) // put a "sameAs" link between the two patterns
+    public registerRewritedPathPattern(triple: Triple, rewritedTriple: Triple): void {
+        let tripleIdentifier = this.getTripleIdentifier(triple)
+        let rewritedTripleIdentifier = this.getTripleIdentifier(rewritedTriple)
+        this.identifiers.set(rewritedTripleIdentifier, this.getOriginalPathPatternIdentifier(tripleIdentifier))
     }
 
-    public get(identifier: string): string {
+    public getOriginalPathPatternIdentifier(identifier: string): string {
         return this.identifiers.get(identifier)
-    }
-
-    public getTriple(identifier: string): PathPattern {
-        return this.id2triple.get(identifier)
     }
 }

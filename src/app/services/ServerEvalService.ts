@@ -67,7 +67,7 @@ export class ServerEvalService {
             }
             // Updates metrics
             this.spy.nbCalls++
-            this.spy.dataTransfer += new TextEncoder().encode(JSON.stringify(response)).length
+            this.spy.dataTransfer += BF.Buffer.byteLength(JSON.stringify(response), 'utf-8')
             this.spy.sizeSolutionMappings += BF.Buffer.byteLength(JSON.stringify(response.bindings), 'utf-8') - 2
             this.spy.sizeControlTuples += BF.Buffer.byteLength(JSON.stringify(response.controls), 'utf-8') - 2
             // Updates solution mappings

@@ -5,7 +5,6 @@ export class PlanVisitor {
     }
   
     protected visitChildren(node: any, suffix = 'Source') {
-        console.log(node, suffix)
         if (`proj${suffix}` in node) {
             this.visitProjection(node[`proj${suffix}`])
         } else if (`scan${suffix}` in node) {

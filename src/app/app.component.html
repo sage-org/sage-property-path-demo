@@ -1,6 +1,56 @@
 <div class="container-fluid p-4">
 
-    <h2 class="mb-3">SaGe-Path: A pay-as-you-go SPARQL Property Path Query Processor using Web Preemption</h2>
+    <h2 class="mb-3 text-center">SaGe-Path: Pay-as-you-go SPARQL Property Path Queries Processing using Web Preemption</h2>
+    <hr>
+    <div class="row m-0 d-flex justify-content-between" >
+        <img class="order-1" src="../assets/university_nantes.png" alt="LS2N" style="height: 100px;">
+        <div class="d-flex flex-column align-items-center p-0 col-12 mt-3 order-3 col-lg-6 mt-lg-0 order-lg-2">
+            <h4>University of Nantes, LS2N</h4>
+            <span><strong>Julien Aimonier-Davat</strong> (julien.aimonier-davat@univ-nantes.fr) </span>
+            <span><strong>Hala Skaf-Molli</strong> (haha.skaf@univ-nantes.fr) </span>
+            <span><strong>Pascal Molli</strong> (pascal.molli@univ-nantes.fr) </span>
+        </div>
+        <img class="order-2 order-lg-3" src="../assets/LS2N_Logo.png" alt="LS2N" style="height: 100px;">
+    </div>
+    <hr>
+
+    <p>
+        SPARQL property path queries allow to write sophisticated navigational
+        queries on knowledge graphs (KG). However, the evaluations of these queries on
+        online KGs are often interrupted by fair use policies, returning
+        only partial results. SaGe-Path addresses this issue by relying both
+        on the <a href="https://hal.archives-ouvertes.fr/hal-02017155/document">
+        Web Premption</a> model and on the concept of Partial Transitive Closure (PTC).
+        Under PTC, the graph exploration of a SPARQL property path query is limited 
+        to a predefined depth. Nodes reached at this particular depth are called 
+        frontier nodes. By returning these nodes to the client, SaGe-Path is able
+        to generate new queries that can continue the exploration of the graph beyond 
+        frontier nodes. In this way, SaGe-Path follows a pay-as-you-go approach
+        to evaluate SPARQL property path queries. The client is free to decide
+        which generated queries he want to compute and how deep he want to explore
+        the graph.
+
+    </p>
+
+    <p>
+        This website allows users to execute their own queries using SaGe-Path, to
+        understand how it works. The following interface provides a real-time
+        visualization of all SaGe-Path internals, allowing to observe the
+        overheads of the approach and the effects of different parameters on
+        performance. A video is avaible to better understand how to use the interface.
+    </p>
+
+    <div class="d-flex justify-content-center align-items-center">
+        <iframe src="https://www.youtube.com/embed/u47rbvIawkc" frameborder="0" style="height: 400px; width: 720px;"></iframe>
+    </div>
+
+    <p>
+        The complete approach and experimental results are available in a research paper accepted at 
+        the ESWC2021, <a href="https://openreview.net/pdf?id=Z9svaleWRAF">available here</a>. 
+        <i>Aimonier-Davat J, Skaf-Molli H., Molli P. Processing SPARQL Property Path Queries Online with Web Preemption.</i>
+    </p>
+
+    <hr>
 
     <div class="row m-0 mb-3">
         <app-config-editor class="col-12 p-0"></app-config-editor>

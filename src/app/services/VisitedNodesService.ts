@@ -13,7 +13,7 @@ export class VisitedNodesService {
     }
 
     private buildPTCIdentifier(controlTuple: InlineControlTuple): string {
-        let path_pattern_id = this.patternsIdentifier.get(controlTuple.path_pattern_id)
+        let path_pattern_id = this.patternsIdentifier.getOriginalPathPatternIdentifier(controlTuple.path_pattern_id)
         let context = controlTuple.context
         return Md5.hashStr(`${JSON.stringify(context)}${path_pattern_id}`).toString()
     }
@@ -46,13 +46,9 @@ export class VisitedNodesService {
     }
 
     public updateVisitedDepth(controlTuple: InlineControlTuple): void {
-        if (!this.hasBeenVisited(controlTuple)) {
-            this.markAsVisited(controlTuple)
-        } else {
-            let id: string = this.buildPTCIdentifier(controlTuple)
-            let depth: number = this.visitedNodes.get(id).get(controlTuple.node)
-            this.visitedNodes.get(id).set(controlTuple.node, Math.min(depth, controlTuple.depth))
-        }
+        let id: string = this.buildPTCIdentifier(controlTuple)
+        let depth: number = this.visitedNodes.get(id).get(controlTuple.node)
+        this.visitedNodes.get(id).set(controlTuple.node, Math.min(depth, controlTuple.depth))
     }
 
     public clear(): void {

@@ -10,6 +10,7 @@ import { SpyService } from './services/SpyService';
 import { SolutionMappingsService } from './services/SolutionMappingsService';
 import { ConfigurationService } from './services/ConfigurationService';
 import { isSupportedQuery } from './utils';
+import { PathPatternIdentifierService } from './services/PathPatternIdentifierService';
 
 @Component({
   selector: 'app-root',
@@ -29,7 +30,8 @@ export class AppComponent {
     public solutionMappings: SolutionMappingsService,
     private spy: SpyService,
     public frontierNodes: FrontierNodesService,
-    private configuration: ConfigurationService) { }
+    private configuration: ConfigurationService,
+    private patternsIdentifier: PathPatternIdentifierService) { }
 
   ngOnInit(): void {
     this.running = false
@@ -46,7 +48,7 @@ export class AppComponent {
     this.frontierNodes.clear()
     this.serverEval.stop()
     this.running = false
-  }
+  } 
 
   public executeQuery() {
     if (!isSupportedQuery(this.configuration.query)) {
@@ -64,6 +66,7 @@ export class AppComponent {
     this.solutionMappings.clear()
     this.running = true
     this.httpClient.post(url, body).subscribe(() => {
+      this.patternsIdentifier.registerOriginalQueryPathPatterns(this.configuration.query)
       let node: ExpandTask = this.taskManager.create(null, this.configuration.query, null)
       this.serverEval.execute(node, this.configuration.graph).then(() => {
         if (this.frontierNodes.queue.length == 0) {

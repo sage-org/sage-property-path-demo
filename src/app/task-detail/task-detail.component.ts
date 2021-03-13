@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ExpandTask } from '../models/ExpandTask';
-import { PathPattern } from '../models/PathPattern';
-import { PathPatternIdentifierService } from '../services/PathPatternIdentifierService';
 import { TaskManagerService } from '../services/TaskManagerService';
 
 @Component({
@@ -29,8 +27,7 @@ export class TaskDetailComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, 
     private router: Router, 
-    private taskManager: TaskManagerService,
-    private patternsIdentifier: PathPatternIdentifierService) { }
+    private taskManager: TaskManagerService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
@@ -53,9 +50,5 @@ export class TaskDetailComponent implements OnInit {
 
   public getContextMappings(): Array<string> {
     return Object.values(this.task.controlTuple.context)
-  }
-
-  public getPathPattern(): PathPattern {
-    return this.patternsIdentifier.getTriple(this.task.controlTuple.path_pattern_id)
   }
 }
