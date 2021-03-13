@@ -61,7 +61,7 @@ export class ServerEvalService {
         let next = null
         while (hasNext) {
             let startTime: number = Date.now()
-            let response: SageResponse = await this.query(node.query, graph, next)
+            let response: SageResponse = await this.queryWithRetryPolicy(node.query, graph, next)
             if (this.stopExecution) {
                 break
             }
@@ -105,8 +105,20 @@ export class ServerEvalService {
         }
     }
 
+    private async queryWithRetryPolicy(query: string, graph: string, next: string, retry=10): Promise<SageResponse> {
+        try {
+            return await this.query(query, graph, next)
+        } catch (error) {
+            if (retry > 0) {
+                return await this.queryWithRetryPolicy(query, graph, next, retry=retry-1)
+            } else {
+                console.error(error)
+                throw error
+            }
+        }
+    }
+
     private query(query: string, graph: string, next: string): Promise<SageResponse> {
-        console.log(query)
         let body: SageQueryBody = {
             query: query,
             defaultGraph: graph,
@@ -118,7 +130,6 @@ export class ServerEvalService {
         return new Promise<SageResponse>((resolve, reject) => {
             let url: string = `${AppSettings.SAGE_ENDPOINT}/sparql`
             this.httpClient.post(url, body, { headers }).subscribe((response: SageResponse) => {                
-                console.log(response)
                 resolve(response)
             }, (error: any) => {
                 reject(error)

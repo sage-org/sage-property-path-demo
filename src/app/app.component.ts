@@ -9,6 +9,7 @@ import { AppSettings } from './app-settings';
 import { SpyService } from './services/SpyService';
 import { SolutionMappingsService } from './services/SolutionMappingsService';
 import { ConfigurationService } from './services/ConfigurationService';
+import { isSupportedQuery } from './utils';
 
 @Component({
   selector: 'app-root',
@@ -48,6 +49,10 @@ export class AppComponent {
   }
 
   public executeQuery() {
+    if (!isSupportedQuery(this.configuration.query)) {
+      alert("ERROR: The query is malformed or does not correspond to a BGP query.")
+      return
+    }
     let url = `${AppSettings.SAGE_ENDPOINT}/backdoor/overwrite-config`
     let body = { 
       quantum: this.configuration.quantum, 
@@ -69,7 +74,12 @@ export class AppComponent {
       }).catch((error: any) => {
         console.error(error)
         this.running = false
+        alert("ERROR: An error occured during the query execution.")
       })
+    }, (error: any) => {
+      console.error(error)
+      this.running = false
+      alert("ERROR: The server is unreachable.")
     })
   }
 
@@ -85,6 +95,7 @@ export class AppComponent {
       }).catch((error: any) => {
         console.error(error)
         this.running = false
+        alert("ERROR: An error occured during the query execution.")
       })
     }
   }
