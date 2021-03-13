@@ -1,27 +1,115 @@
-# PpathsDemo
+# SaGe-Path: Pay-as-you-go SPARQL Property Path Queries Processing using Web Preemption
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.3.
+**Authors:** Julien Aimonier-Davat (LS2N), Hala Skaf-Molli (LS2N), and Pascal Molli (LS2N)
 
-## Development server
+**Abstract** 
+SPARQL property path queries allow to write sophisticated navigation
+queries on knowledge graphs (KG).  However, the evaluations of these queries on
+online KGs are often interrupted by fair use policies, returning
+only partial results. SaGe-Path avoids this issue by  relying on the
+concept of Partial Transitive Closure (PTC). Under PTC, the
+exploration depth of a SPARQL property path query is limited to a predefined depth.
+When the depth limit is reached, frontier nodes are returned.  A
+PTC-client is able to reuse frontier nodes to continue graph
+exploration.  In this way, SaGe-Path follows a pay-as-you-go approach
+to evaluate SPARQL property path queries.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+This demonstration shows how queries that do not complete on
+the public Wikidata SPARQL endpoint can  complete using \pass. An extended user-interface provides real-time
+visualizations of all SaGe-Path  internals, allowing to understand
+overheads, and the effects of  different parameters on
+performances. SaGe-Path  demonstrates how complex SPARQL property path queries can be
+evaluated online efficiently and return complete results.
 
-## Code scaffolding
+# Installation
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Server installation
 
-## Build
+### Dependencies
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+* [Python 3.7]() (*or higher*)
+* [pip](https://pip.pypa.io/en/stable/)
+* [Virtualenv](https://pypi.org/project/virtualenv)
+* **gcc/clang** with **c++11 support**
+* **Python Development headers**
+> You should have the `Python.h` header available on your system.   
+> For example, for Python 3.6, install the `python3.6-dev` package on Debian/Ubuntu systems.
 
-## Running unit tests
+### Manual installation
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```bash
+# Download the SaGe server and move to the ppaths-demo branch
+git clone https://github.com/sage-org/sage-engine
+cd sage-engine
+git checkout ppaths-demo
+# Create a virtual environment to isolate SaGe dependencies
+virtualenv --python=/usr/bin/python3 sage-env
+# Activate the virtual environment
+source sage-env/bin/activate
+# Install SaGe dependencies
+pip install -r requirements.txt
+pip install -e .[hdt]
+```
 
-## Running end-to-end tests
+To make the installation of SaGe easier, SaGe is installed in a virtual environment.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+```bash
+# To activate the SaGe environment (sage-env)
+source sage-env/bin/activate
+# To deactivate the SaGe environment
+deactivate
+```
 
-## Further help
+### Download datasets
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Create a directory named *datasets* at the root of the project.
+Then, download the two *.hdt* datasets into the *datasets* directory.
+```bash
+wget nas.jadserver.fr/thesis/projects/ppaths/datasets/gmark.hdt
+wget nas.jadserver.fr/thesis/projects/ppaths/datasets/gmark.nt
+```
+
+### Configuration file
+
+Create a *config.yaml* file at the root of the project with the following content.
+```yaml
+quota: 60000
+max_depth: 5
+max_results: 10000
+max_control_tuples: 10000
+graphs:
+- name: gmark
+  uri: http://example.org/datasets/gmark
+  description: Synthetic graph of 10M triples generated with the gMark framework
+  backend: hdt-file
+  file: datasets/gmark.hdt
+- name: wikidata
+  uri: http://example.org/datasets/wikidata
+  description: A dump of the wikidata dataset (2017)
+  backend: hdt-file
+  file: datasets/wikidata.hdt
+```
+
+### Start the server
+
+```bash
+# Do not forget to activate the SaGe environment
+source sage-env/bin/activate
+# Launch the Sage server with 1 worker on port 8080
+sage config.yaml -w 1 -p 8080
+```
+
+## Client installation
+
+```bash
+# Download the client interface
+git clone https://github.com/JulienDavat/ppaths-demo.git
+cd ppaths-demo
+# Install the dependencies
+npm install
+# Run the angular server
+ng serve
+```
+
+Once the SaGe server is started on port 8080 and the angular server is up,
+navigate to *http://localhost:4200* on your browser !
