@@ -3,23 +3,27 @@
 **Authors:** Julien Aimonier-Davat (LS2N), Hala Skaf-Molli (LS2N), and Pascal Molli (LS2N)
 
 **Abstract** 
-SPARQL property path queries allow to write sophisticated navigation
-queries on knowledge graphs (KG).  However, the evaluations of these queries on
+SPARQL property path queries allow to write sophisticated navigational
+queries on knowledge graphs (KG).  However, the evaluation of these queries on
 online KGs are often interrupted by fair use policies, returning
-only partial results. SaGe-Path avoids this issue by  relying on the
+only partial results. SaGe-Path addresses this issue by  relying on the
 concept of Partial Transitive Closure (PTC). Under PTC, the
 exploration depth of a SPARQL property path query is limited to a predefined depth.
 When the depth limit is reached, frontier nodes are returned.  A
-PTC-client is able to reuse frontier nodes to continue graph
-exploration.  In this way, SaGe-Path follows a pay-as-you-go approach
+PTC-client is then able to reuse frontier nodes to continue the exploration
+of the graph. In this way, SaGe-Path follows a pay-as-you-go approach
 to evaluate SPARQL property path queries.
 
 This demonstration shows how queries that do not complete on
 the public Wikidata SPARQL endpoint can  complete using SaGe-Path. An extended user-interface provides real-time
-visualizations of all SaGe-Path  internals, allowing to understand
+visualization of all SaGe-Path  internals, allowing to understand
 overheads, and the effects of  different parameters on
-performances. SaGe-Path  demonstrates how complex SPARQL property path queries can be
-evaluated online efficiently and return complete results.
+performance. SaGe-Path  demonstrates how complex SPARQL property path queries can be
+efficiently evaluated online with garanteed complete results.
+
+# Online demonstration of SaGe-Path
+
+[![Watch the video](https://img.youtube.com/vi/u47rbvIawkc/maxresdefault.jpg)](https://youtu.be/u47rbvIawkc)
 
 # Installation
 
