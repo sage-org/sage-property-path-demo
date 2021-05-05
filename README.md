@@ -77,6 +77,7 @@ wget nas.jadserver.fr/thesis/projects/ppaths/datasets/gmark.nt
 
 Create a *config.yaml* file at the root of the project with the following content.
 ```yaml
+name: Sage Path Server
 quota: 60000
 max_depth: 5
 max_results: 10000
