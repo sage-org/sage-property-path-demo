@@ -43,7 +43,7 @@ efficiently evaluated online with garanteed complete results.
 
 ```bash
 # Download the SaGe server and move to the ppaths-demo branch
-git clone https://github.com/sage-org/sage-engine
+git clone https://github.com/JulienDavat/sage-engine
 cd sage-engine
 git checkout ppaths-demo
 # Create a virtual environment to isolate SaGe dependencies
