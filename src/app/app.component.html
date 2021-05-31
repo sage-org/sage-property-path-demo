@@ -1,7 +1,9 @@
 <div class="container-fluid p-4">
 
     <h2 class="mb-3 text-center">SaGe-Path: Pay-as-you-go SPARQL Property Path Queries Processing using Web Preemption</h2>
+
     <hr>
+
     <div class="row m-0 d-flex justify-content-between" >
         <img class="order-1" src="../assets/university_nantes.png" alt="LS2N" style="height: 100px;">
         <div class="d-flex flex-column align-items-center p-0 col-12 mt-3 order-3 col-lg-6 mt-lg-0 order-lg-2">
@@ -12,9 +14,8 @@
         </div>
         <img class="order-2 order-lg-3" src="../assets/LS2N_Logo.png" alt="LS2N" style="height: 100px;">
     </div>
+
     <hr>
-
-
 
     <!-- <p>
         SPARQL property path queries allow to write sophisticated navigational
@@ -42,93 +43,95 @@
         performance. A video is avaible to better understand how to use the interface.
     </p> -->
 
-    <h2>1. Introduction</h2>
-
-    <p>
-        SPARQL property path queries represent an important tool to write complex
-        navigational queries over knowledge graphs. However the evaluation of
-        property path queries on online knowledge graphs are often interrupted by
-        fair use policies, preventing them to return complete results [1].
-        To overcome this issue, state-of-art approaches propose to decompose SPARQL
-        property path queries into a set of subqueries that are guaranteed to terminate.
-        For instance, the Triple Pattern Fragment model [3] ensures the termination
-        of any triple pattern query, while the Web preemption model [2] ensures the
-        termination of any BGP query. However,
-        such a decomposition can generate a high number of subqueries and require
-        to transfer a lot of intermediate results from the server to the client [1].
-    </p>
-
-    <h2>2. SaGe-Path</h2>
-
-    <p>
-        SaGe-Path is a new approach to compute SPARQL property path queries on
-        online knowledge graphs with guaranteed complete results. Based on the
-        web preemption, SaGe-Path proposes a new kind of collaboration
-        between the client and the server. If web preemption cannot compute a
-        transitive closure on server-side, in our ESWC2020 article [1], we
-        demonstrated that a preemptable server can fairly process a Partial
-        Transitive Closure (PTC). As a transitive closure, a PTC is computed using
-        a graph traversal algorithm except that the exploration of the graph is
-        limited to a predefined depth k. Nodes visited at depth k are called frontier nodes.
-        To ensure complete results, the server relies on the client by sending it
-        the frontier nodes. The SaGe-Path client is then
-        able to generate new path queries that restart the exploration from these
-        frontier nodes.
-    </p>
-
-    <p>
-        Compared to the state-of-art, all transitive closures and BGPs are now executed
-        on the preemptable server, only results and frontier nodes are shipped to
-        the client. As no more joins are performed on the client, performance
-        drastically improved.
-    </p>
-
-    <h2>3. Demonstration overview</h2>
-
-    <p>
-        In this demonstration, we offer the possibility for the user to understand
-        how property path queries are evaluated using SaGe-Path and what is the
-        impact of the different parameters on performance. For example, the user
-        can change the time quantum and the depth limit used by the PTC operator.
-        In a real world configuration, these two parameters are defined by the
-        data provider. Using our interface, the user can write and evaluate its
-        own path query. Different views allow the user to observe the frontier
-        nodes sent by the server and how the SaGe-Path client expand these nodes
-        by generating new path queries. Real time statistics are also available
-        to observe the impact of the different parameters on performance and to
-        understand the overheads of the approach.
-    </p>
-
-    <p>
-        A video that explain how to use the user interface is available on YouTube.
-        In this video, we show you how a SPARQL property path query that does not
-        terminate on Wikidata, is evaluated with SaGe-Path. The implementation of
-        this Web client is available on <a href="https://github.com/sage-org/sage-property-path-demo">Github</a>.
-    </p>
-
-    <div class="d-flex justify-content-center align-items-center">
-        <iframe src="https://www.youtube.com/embed/u47rbvIawkc" frameborder="0" style="height: 400px; width: 720px;"></iframe>
+    <div>
+        <div>
+            <h2>1. Introduction</h2>
+            <p>
+                SPARQL property path queries represent an important tool to write complex
+                navigational queries over knowledge graphs. However the evaluation of
+                property path queries on online knowledge graphs are often interrupted by
+                fair use policies, preventing them to return complete results [1].
+                To overcome this issue, state-of-art approaches propose to decompose SPARQL
+                property path queries into a set of subqueries that are guaranteed to terminate.
+                For instance, the Triple Pattern Fragment model [3] ensures the termination
+                of any triple pattern query, while the Web preemption model [2] ensures the
+                termination of any BGP query. However,
+                such a decomposition can generate a high number of subqueries and require
+                to transfer a lot of intermediate results from the server to the client [1].
+            </p>
+        </div>
+        <div>
+            <h2>2. SaGe-Path</h2>
+            <p>
+                SaGe-Path is a new approach to compute SPARQL property path queries on
+                online knowledge graphs with guaranteed complete results. Based on the
+                web preemption, SaGe-Path proposes a new kind of collaboration
+                between the client and the server. If web preemption cannot compute a
+                transitive closure on server-side, in our ESWC2020 article [1], we
+                demonstrated that a preemptable server can fairly process a Partial
+                Transitive Closure (PTC). As a transitive closure, a PTC is computed using
+                a graph traversal algorithm except that the exploration of the graph is
+                limited to a predefined depth k. Nodes visited at depth k are called frontier nodes.
+                To ensure complete results, the server relies on the client by sending it
+                the frontier nodes. The SaGe-Path client is then
+                able to generate new path queries that restart the exploration from these
+                frontier nodes.
+            </p>
+            <p>
+                Compared to the state-of-art, all transitive closures and BGPs are now executed
+                on the preemptable server, only results and frontier nodes are shipped to
+                the client. As no more joins are performed on the client, performance
+                drastically improved.
+            </p>
+        </div>
+        <div>
+            <h2>3. Demonstration overview</h2>
+            <p>
+                In this demonstration, we offer the possibility for the user to understand
+                how property path queries are evaluated using SaGe-Path and what is the
+                impact of the different parameters on performance. For example, the user
+                can change the time quantum and the depth limit used by the PTC operator.
+                In a real world configuration, these two parameters are defined by the
+                data provider. Using our interface, the user can write and evaluate its
+                own path query. Different views allow the user to observe the frontier
+                nodes sent by the server and how the SaGe-Path client expand these nodes
+                by generating new path queries. Real time statistics are also available
+                to observe the impact of the different parameters on performance and to
+                understand the overheads of the approach.
+            </p>
+            <p>
+                A video that explain how to use the user interface is available on YouTube.
+                In this video, we show you how a SPARQL property path query that does not
+                terminate on Wikidata, is evaluated with SaGe-Path. The implementation of
+                this Web client is available on <a href="https://github.com/sage-org/sage-property-path-demo">Github</a>.
+            </p>
+            <div class="d-flex justify-content-center align-items-center">
+                <iframe src="https://www.youtube.com/embed/u47rbvIawkc" frameborder="0" style="height: 400px; width: 720px;"></iframe>
+            </div>
+        </div>
+        <div>
+            <h2>4. References</h2>
+            <p>
+                <strong>[1]</strong> Aimonier-Davat J., Skaf-Molli H., Molli P.:
+                Processing SPARQL Property Path Queries Online with Web Preemption,
+                <a href="https://openreview.net/pdf?id=Z9svaleWRAF">https://openreview.net/pdf?id=Z9svaleWRAF</a>
+                (2020).
+            </p>
+            <p>
+                <strong>[2]</strong> Miner T., Skaf-Molli H., Molli P.: SaGe: Web
+                Preemption for Public SPARQL Query Services, <a href="https://hal.archives-ouvertes.fr/hal-02017155/document">
+                https://hal.archives-ouvertes.fr/hal-02017155/document</a> (2019).
+            </p>
+            <p>
+                <strong>[3]</strong> Verborgh R., Vander Sande M., Hartig O., Van Herwegen J.,
+                De Vocht L., De Meester B., Haesendonck G., Colpaert P.: Triple pattern
+                fragments: a low-cost knowledge graph interface for the web.,
+                <a href="https://linkeddatafragments.org/publications/jws2016.pdf">
+                https://linkeddatafragments.org/publications/jws2016.pdf</a> (2016).
+            </p>
+        </div>
     </div>
 
-    <h2>4. References</h2>
-        <p>
-            <strong>[1]</strong> Aimonier-Davat J., Skaf-Molli H., Molli P.:
-            Processing SPARQL Property Path Queries Online with Web Preemption,
-            <a href="https://openreview.net/pdf?id=Z9svaleWRAF">https://openreview.net/pdf?id=Z9svaleWRAF</a>
-            (2020).
-        </p>
-        <p>
-            <strong>[2]</strong> Miner T., Skaf-Molli H., Molli P.: SaGe: Web
-            Preemption for Public SPARQL Query Services, <a href="https://hal.archives-ouvertes.fr/hal-02017155/document">
-            https://hal.archives-ouvertes.fr/hal-02017155/document</a> (2019).
-        </p>
-        <p>
-            <strong>[3]</strong> Verborgh R., Vander Sande M., Hartig O., Van Herwegen J.,
-            De Vocht L., De Meester B., Haesendonck G., Colpaert P.: Triple pattern
-            fragments: a low-cost knowledge graph interface for the web.,
-            <a href="https://linkeddatafragments.org/publications/jws2016.pdf">
-            https://linkeddatafragments.org/publications/jws2016.pdf</a> (2016).
-        </p>
     <hr>
 
     <div class="row m-0 mb-3">
