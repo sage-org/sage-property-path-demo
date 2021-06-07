@@ -57,31 +57,36 @@
                 of any triple pattern query, while the Web preemption model [2] ensures the
                 termination of any BGP query. However,
                 such a decomposition can generate a high number of subqueries and require
-                to transfer a lot of intermediate results from the server to the client [1].
+                to transfer a lot of intermediate results from the server to the client,
+                leading to poor performance [1].
             </p>
         </div>
         <div>
             <h2>2. SaGe-Path</h2>
             <p>
                 SaGe-Path is a new approach to compute SPARQL property path queries on
-                online knowledge graphs with guaranteed complete results. Based on the
-                web preemption, SaGe-Path proposes a new kind of collaboration
-                between the client and the server. If web preemption cannot compute a
-                transitive closure on server-side, in our ESWC2020 article [1], we
-                demonstrated that a preemptable server can fairly process a Partial
-                Transitive Closure (PTC). As a transitive closure, a PTC is computed using
-                a graph traversal algorithm except that the exploration of the graph is
-                limited to a predefined depth k. Nodes visited at depth k are called frontier nodes.
-                To ensure complete results, the server relies on the client by sending it
-                the frontier nodes. The SaGe-Path client is then
-                able to generate new path queries that restart the exploration from these
-                frontier nodes.
+                online knowledge graphs that guarantees complete results. Based on the
+                web preemption, SaGe-Path computes property paths thanks to a collaboration
+                between the server and the client. In our ESWC2021 article [1], we
+                demonstrated that Web preemption can fairly process Partial Transitive
+                Closures (PTC), i.e. transitive closures for which the exploration of the
+                graph is limited to a predefined depth k. As the server does not return
+                complete results, it collaborates with the client by sending it
+                nodes visited at depth k. The SaGe-Path client is then able to
+                restart the exploration from these nodes by generating new
+                property path queries.
             </p>
             <p>
-                Compared to the state-of-art, all transitive closures and BGPs are now executed
-                on the preemptable server, only results and frontier nodes are shipped to
-                the client. As no more joins are performed on the client, performance
-                drastically improved.
+                Compared to the state-of-art, property path queries are no longer
+                decomposed on the client. As a result, no intermediate results
+                are transferred and the number of HTTP calls decreases drastically,
+                leading to much better performance. However, this approach also has
+                limitations. Because of the web preemption and the way parameters have
+                been configured, when
+                computing a transitive closure, the server may visit the same nodes
+                several times, leading to a bad worst-case complexity. However,
+                in practice, what is gained in terms of network costs counterbalances
+                this overhead.
             </p>
         </div>
         <div>
@@ -94,7 +99,7 @@
                 In a real world configuration, these two parameters are defined by the
                 data provider. Using our interface, the user can write and evaluate its
                 own path query. Different views allow the user to observe the frontier
-                nodes sent by the server and how the SaGe-Path client expand these nodes
+                nodes sent by the server and how the SaGe-Path client expands these nodes
                 by generating new path queries. Real time statistics are also available
                 to observe the impact of the different parameters on performance and to
                 understand the overheads of the approach.
