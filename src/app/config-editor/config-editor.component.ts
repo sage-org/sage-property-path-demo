@@ -74,10 +74,10 @@ WHERE {
 }`,
     'Creative works with the fictional works that inspired them': `PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 PREFIX wd: <http://www.wikidata.org/entity/>
-SELECT ?artWork ?otherWork WHERE {
-  ?artWork wdt:P144 ?otherWork .
-  ?artWork wdt:P31 ?v . ?v wdt:P279* wd:Q17537576 .
-  ?otherWork wdt:P136 wd:Q8253 .
+SELECT ?artWork ?inspiration WHERE {
+  ?creativeWork wdt:P144 ?inspiration .
+  ?creativeWork wdt:P31 ?class . ?class wdt:P279* wd:Q17537576 .
+  ?inspiration wdt:P136 wd:Q8253 .
 }`,
     'All chemicals with their manufacturer': `PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 PREFIX wd: <http://www.wikidata.org/entity/>
